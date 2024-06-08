@@ -1,0 +1,115 @@
+.container1 {
+    width: 800px;
+    min-height: 550px;
+    display: flex;
+    justify-content: center;
+    margin: 10px auto;
+    background: #ffffff;
+    box-shadow: rgba(44, 44, 44, 0.08) 0px 4px 16px;
+    border-radius: 15px;
+}
+
+.imageBox {
+    background: #ffeceb;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.imageBox .logo {
+    width: 160px;
+}
+
+.imageBox .person {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+form {
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    padding: 32px;
+    text-align: left;
+    justify-content: center;
+}
+
+h3,
+h5 {
+    outline: none;
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: 500;
+    color: rgb(44, 44, 44);
+}
+
+h3 {
+    margin-top: 4px;
+    margin-bottom: 32px;
+}
+
+h4 {
+    font-size: 18px;
+    line-height: 28px;
+    font-weight: 500;
+    color: rgb(44, 44, 44);
+    text-align: left;
+}
+
+h5 {
+    font-size: 18px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-control {
+    width: 100%;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 10px 16px;
+}
+
+.form-control:focus {
+    cursor: initial;
+}
+
+.loginButton {
+    width: 100% !important;
+    position: relative;
+    height: 48px;
+    display: inline-block;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    width: fit-content;
+    background-color: rgb(224, 60, 49);
+    padding: 14px 16px;
+    color: rgb(255, 255, 255);
+    opacity: 1;
+    border: none;
+    font-weight: bold;
+}
+
+.invalid {
+    border: 1px solid red;
+}
+
+.errorText {
+    color: red;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.hyperlink {
+    color: #e03c31;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.hyperlink:hover {
+    color: #b1332a;
+    text-decoration: underline;
+}

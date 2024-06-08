@@ -1,6 +1,6 @@
 <template>
   <div class="profile page">
-    <h1>{{msg}}</h1><br><br>
+    <h1>{{ msg }}</h1><br><br>
     <transition>
       <router-view v-if="$currentUser.id"></router-view>
     </transition>

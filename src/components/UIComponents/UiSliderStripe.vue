@@ -5,9 +5,9 @@
         <div
           ref="slides"
           :class="{
-          'is-before-active': indexBeforeActive === index,
-          'is-active': indexActive === index,
-          'is-after-active': indexAfterActive === index
+            'is-before-active': indexBeforeActive === index,
+            'is-active': indexActive === index,
+            'is-after-active': indexAfterActive === index
           }"
           class="slide"
           v-for="(item, index) in images"

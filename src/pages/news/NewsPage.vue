@@ -8,7 +8,7 @@
     <div class="news-list">
       <DataBox :loading="loading" :isEmpty="isEmpty" :error="error">
         <div class="item" v-for="item in news" :key="item.id">
-          {{item.title}}
+          {{ item.title }}
         </div>
       </DataBox>
     </div>

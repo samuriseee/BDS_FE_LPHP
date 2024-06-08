@@ -2,11 +2,15 @@
 import profilePage from '../pages/profile/ProfilePage.vue'
 import profilePostsPage from '../pages/profile/ProfilePostsPage.vue'
 
-// single pages
+import userPostManagement from '../pages/userPostManagement/index.vue'
+import CreateNewRealEstates from '../pages/userPostManagement/CreateNewPost.vue'
 import homePage from '../pages/Home.vue'
 import newsPage from '../pages/news/NewsPage.vue'
-import loginPage from '../pages/Login.vue'
+import loginPage from '../pages/AuthenView/LoginView.vue'
 import notFoundPage from '../pages/NotFound.vue'
+import registerPage from '../pages/AuthenView/RegisterView.vue'
+import realEstateList from '../pages/realEstateList/realEstateList.vue'
+import realEstateDetail from '../pages/realEstateList/realEstateDetail.vue'
 
 import { routePropResolver } from './util'
 import { DOMAIN_TITLE } from '../.env'
@@ -26,6 +30,28 @@ export const routes = [
     props: routePropResolver
   },
   {
+    path: '/userPostManagement',
+    component: userPostManagement,
+    meta: { isAuth: true, title: `${DOMAIN_TITLE} | userPostManagement` },
+    children: [
+      {
+        path: 'create',
+        name: 'createNewPost',
+        component: CreateNewRealEstates
+      }
+    ]
+  },
+  {
+    path: '/house/:businessType/:realEstateType',
+    component: realEstateList,
+    meta: { title: `${DOMAIN_TITLE} | real estate list` }
+  },
+  {
+    path: '/estate/:id',
+    component: realEstateDetail,
+    meta: { title: `${DOMAIN_TITLE} | real estate detail` }
+  },
+  {
     path: '/profile',
     component: profilePage,
     meta: { isAuth: true, title: `${DOMAIN_TITLE} | profile` },
@@ -42,6 +68,12 @@ export const routes = [
     name: 'login',
     component: loginPage,
     meta: { title: `${DOMAIN_TITLE} | login` }
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: registerPage,
+    meta: { title: `${DOMAIN_TITLE} | register` }
   },
   {
     path: '*',
