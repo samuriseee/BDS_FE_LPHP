@@ -6,7 +6,7 @@
       class="sidebar"
       :style="{
         maxWidth: 'auto',
-        minWidth: 'auto',
+        minWidth: '250px',
         width: 'auto',
       }"
     >
@@ -19,6 +19,7 @@
           :style="{
             textAlign: 'initial',
             height: '100vh',
+            
           }"
         >
           <div class="customer-info">
@@ -54,7 +55,7 @@
               :key="child.key"
               :index="child.key"
             >
-              <div class="menuItem" :href="child.href">{{ child.title }}</div>
+              <router-link class="menuItem" :to="child.href">{{ child.title }}</router-link>
             </el-menu-item>
           </el-submenu>
         </el-menu>
@@ -141,10 +142,16 @@ export default {
   computed: {
     ...mapGetters(["currentUser"]),
     spliceUsernameToMakeAvatar() {
-      return this.currentUser.ho_ten.slice(0, 1);
+      if (this.currentUser) {
+        return this.currentUser?.ho_ten.slice(0, 1).toUpperCase();
+      }
+      return "";
     },
     getUserFromStore() {
-      return this.currentUser.ho_ten.toUpperCase();
+      if (this.currentUser) {
+        return this.currentUser?.ho_ten;
+      }
+      return "";
     },
     activeKey() {
       let activeKey = "";
@@ -174,6 +181,7 @@ export default {
   max-width: 250px;
 }
 .sidebar {
+  font-family: "Lexend", sans-serif;
   overflow: scroll;
   height: 100vh;
   position: fixed;
@@ -186,9 +194,9 @@ export default {
   max-width: 250px;
 }
 .customer-info {
-  width: 250px;
   padding: 20px;
   display: flex;
+  flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   gap: 20px;
@@ -221,9 +229,6 @@ h4 {
   font-weight: 500;
   letter-spacing: -0.2px;
   color: rgb(44, 44, 44);
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  max-width: 160px;
+  word-wrap: break-word;
 }
 </style>

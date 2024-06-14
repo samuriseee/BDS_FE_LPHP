@@ -1,23 +1,40 @@
 <template>
-  <div class="re_card-full" @click="$router.push('/estate/' + estate.ID)">
+  <div class="re_card-full" @click="$router.push('/estate/' + estate.bat_dong_san.id)">
     <div class="re_card-image">
       <div v-for="(HinhAnh, index) in getFirst4Images" :key="index">
         <img :src="HinhAnh" alt="" />
       </div>
     </div>
     <div class="re_card-info">
-      <h3>{{ estate.TieuDe }}</h3>
+      <h3>{{ estate.bat_dong_san.TieuDe }}</h3>
       <div class="re_card-physicalInfo">
-        <p style="color: red; font-weight: 500" v-if="estate.MucGia > 0">
-          {{ estate.MucGia }}
+        <p
+          style="color: red; font-weight: 500"
+          v-if="estate.bat_dong_san.MucGia > 0"
+        >
+          {{ formatCurrencyToVietnamese(estate.bat_dong_san.MucGia) }}
         </p>
-        <p style="color: red; font-weight: 500">{{ estate.DienTich }} m²</p>
-        <p>{{ estate.DiaChi }}</p>
-        <p><font-awesome-icon icon="bathtub" /> {{ estate.SoPhongTam }}</p>
-        <p><font-awesome-icon icon="bed" /> {{ estate.SoPhongNgu }}</p>
-        <p>{{ estate.QuanHuyen }}, {{ estate.ThanhPho }}</p>
+        <p style="color: red; font-weight: 500">
+          {{ estate.bat_dong_san.DienTich }} m²
+        </p>
+        <p :style="{
+          maxWidth: '250px',
+        }">{{ estate.bat_dong_san.DiaChi }}</p>
+        <p>
+          <font-awesome-icon icon="bathtub" />
+          {{ estate.bat_dong_san.SoPhongTam }}
+        </p>
+        <p>
+          <font-awesome-icon icon="bed" /> {{ estate.bat_dong_san.SoPhongNgu }}
+        </p>
+        <p>
+          {{ estate.bat_dong_san.Quan }}, {{ estate.bat_dong_san.ThanhPho }}
+        </p>
       </div>
-      <div class="re_card-descript">{{ spliceDescription }}</div>
+      <div class="re_card-descript"
+           :style="{
+             fontWeight: '300',
+           }">{{ spliceDescription }}</div>
       <div class="re_card-contact">
         <div class="re_card-author">
           <a-avatar
@@ -29,12 +46,13 @@
               marginRight: '10px',
             }"
           >
-            <!-- {{ estate.HoTen.slice(0, 1) || "A" }} -->
+            {{ estate.nguoi_dung.ho_ten.slice(0, 1) }}
           </a-avatar>
-          <!-- {{ estate.HoTen || "Người đăng"}} -->
+          {{ estate.nguoi_dung.ho_ten }}
         </div>
         <div class="re_card-number">
-          <font-awesome-icon icon="phone" />  {{ estate.sdt || "Chưa cập nhật" }}
+          <font-awesome-icon icon="phone" />
+          {{ estate.nguoi_dung.so_dien_thoai || "Chưa cập nhật" }}
         </div>
       </div>
     </div>
@@ -42,6 +60,7 @@
 </template>
 
 <script>
+import { formatCurrencyToVietnamese } from "@/services/util";
 export default {
   name: "EstateCardOnListPage",
   props: {
@@ -55,15 +74,16 @@ export default {
   },
   computed: {
     getFirst4Images() {
-      console.log("estate", this.estate);
-      return this.estate.HinhAnh.slice(0, 4);
+      return this.estate.bat_dong_san.HinhAnh.slice(0, 4);
     },
     spliceDescription() {
-      if (!this.estate.MoTa) return this.estate.MoTa;
-      else return this.estate.MoTa.slice(0, 300) + "...";
+      if (!this.estate.bat_dong_san.MoTa) return this.estate.bat_dong_san.MoTa;
+      else return this.estate.bat_dong_san.MoTa.slice(0, 300) + "...";
     },
   },
-  methods: {},
+  methods: {
+    formatCurrencyToVietnamese,
+  },
 };
 </script>
 

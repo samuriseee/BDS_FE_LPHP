@@ -1,37 +1,60 @@
+<!-- eslint-disable vue/max-attributes-per-line -->
 <!-- eslint-disable no-unused-vars -->
 <template>
   <div class="navbar-wrapper">
     <div class="fixed navigation re__full-menu">
       <div class="rightSide">
         <div class="logo">
-          <img src="@/assets/image/logo.png" alt="" @click="ToHome()" />
+          <img src="@/assets/image/CityAHomes.vn-1.png" alt="" @click="ToHome()" />
         </div>
         <nav>
-          <a-dropdown>
-            <a class="ant-dropdown-link" :style="menuItemStyle">
+          <el-dropdown placement="top-start">
+            <router-link :to="'/house/sell'" class="el-dropdown-link" :style="menuItemStyle">
               Nhà đất bán
-            </a>
-            <a-menu slot="overlay" :style="menuDropdownStyle">
-              <a-menu-item v-for="item in allBuyTypes" :key="item.id">
-                <router-link :to="'/house/sell/' + item.id">{{ item.LoaiBDS }}</router-link>
-              </a-menu-item>
-            </a-menu>
-          </a-dropdown>
-          <a-dropdown>
-            <a class="ant-dropdown-link" :style="menuItemStyle">
+            </router-link>
+            <el-dropdown-menu slot="dropdown" :style="menuDropdownStyle">
+              <el-dropdown-item v-for="item in allBuyTypes" :key="item.id">
+                <router-link :to="'/house/sell/' + item.id" :style="{
+                  color: 'black',
+                  fontWeight: '600',
+                }">{{ item.LoaiBDS }}</router-link>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+          <el-dropdown placement="top-start">
+            <router-link :to="'/house/rent'" class="ant-dropdown-link" :style="menuItemStyle">
               Nhà đất cho thuê
-            </a>
-            <a-menu slot="overlay" :style="menuDropdownStyle">
-              <a-menu-item v-for="item in allRentTypes" :key="item.id">
-                <router-link :to="'/house/rent/' + item.id">{{ item.LoaiBDS }}</router-link>
-              </a-menu-item>
-            </a-menu>
-          </a-dropdown>
+            </router-link>
+            <el-dropdown-menu slot="dropdown" :style="menuDropdownStyle">
+              <el-dropdown-item v-for="item in allRentTypes" :key="item.id">
+                <router-link :to="'/house/rent/' + item.id" :style="{
+                  color: 'black',
+                  fontWeight: '600',
+                }">{{ item.LoaiBDS }}</router-link>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
 
           <div v-if="isLoggedIn && isAdmin">
-            <router-link to="/employee-management"
-            >Quản trị website</router-link
-            >
+            <a-dropdown>
+              <a class="ant-dropdown-link" :style="menuItemStyle">
+                Quản trị Website
+              </a>
+              <a-menu slot="overlay" :style="menuDropdownStyle">
+                <a-menu-item>
+                  <router-link to="/admin/dashboard">Thống kê</router-link>
+                </a-menu-item>
+                <a-menu-item>
+                  <router-link to="/admin/user-management">Quản lý người dùng</router-link>
+                </a-menu-item>
+                <a-menu-item>
+                  <router-link to="/admin/account-management">Quản lý tài khoản</router-link>
+                </a-menu-item>
+                <a-menu-item>
+                  <router-link to="/admin/post-management">Quản lý tin đăng</router-link>
+                </a-menu-item>
+              </a-menu>
+            </a-dropdown>
           </div>
           <div v-if="isLoggedIn && isEmployee">
             <router-link to="/employee-page/employee-task"
@@ -88,7 +111,7 @@
           <a-divider type="vertical"></a-divider>
           <router-link to="/register">Đăng ký</router-link>
         </div>
-        <div class="CreatePost">
+        <div v-if="!isAdmin" class="CreatePost">
           <router-link to="/userPostManagement/create">Đăng tin</router-link>
         </div>
       </div>
@@ -116,6 +139,7 @@ export default {
       menuDropdownStyle: {
         maxHeight: "350px",
         overflowY: "auto",
+        color: "#000",
       },
     };
   },
@@ -131,7 +155,7 @@ export default {
       return this.currentUser !== null;
     },
     isAdmin() {
-      return this.currentUser.role === "admin";
+      return this.currentUser?.is_admin || false;
     },
     isEmployee() {
       return this.currentUser.role === "employee";
@@ -159,6 +183,7 @@ p {
 
 .navbar-wrapper {
   height: 96px;
+  font-family: "Lexend", sans-serif;
 }
 
 .fixed {
@@ -197,6 +222,8 @@ p {
 }
 
 .rightSide .logo img {
+  width: 120px;
+  height: 65px;
   margin-right: 10px;
   object-fit: cover;
   cursor: pointer;
@@ -254,7 +281,7 @@ p {
 }
 
 .leftSide .CreatePost a {
-  color: rgb(224, 60, 49);
+  color: #e03c31;
   background: #fff;
   border: solid 1px rgb(224, 60, 49);
   font-size: 14px;

@@ -82,7 +82,7 @@ export class AuthService {
   }
 
   static hasRefreshToken () {
-    return Boolean(localStorage.getItem('refreshToken'))
+    return Boolean(localStorage.getItem('token'))
   }
 
   static setRefreshToken (status) {

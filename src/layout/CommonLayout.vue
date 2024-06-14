@@ -4,22 +4,21 @@
   }">
     <NavBar></NavBar>
     <div class="wrapper">
-      <!-- <transition name="fade">
-        <router-view></router-view>
-      </transition> -->
       <slot></slot>
     </div>
+    <a-layout-footer><Footer /></a-layout-footer>
   </a-layout>
 
 </template>
 
 <script>
 import NavBar from './NavBar.vue'
-
+import Footer from './Footer.vue'
 export default {
   name: 'CommonLayout',
   components: {
-    NavBar
+    NavBar,
+    Footer
   }
 }
 </script>

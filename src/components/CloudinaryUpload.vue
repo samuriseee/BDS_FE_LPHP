@@ -18,7 +18,7 @@
         <div v-for="(url, index) in imageUrls" :key="index" class="image-frame">
           <div :style="{
             padding: '0px',
-            position: 'realative',
+            position: 'relative',
           }">
             <el-image
               :style="{
@@ -30,7 +30,7 @@
               :preview-src-list="imageUrls">
             </el-image>
             <el-button :style="{
-
+                         top: '5px',
                          position: 'absolute',
                          right: '5px'
 

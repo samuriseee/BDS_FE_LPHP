@@ -45,9 +45,8 @@
           <location-select @locationUpdate="locationUpdate" />
           <div class="form-group">
             <label for="title">Địa chỉ hiện thị trên tin đăng</label>
-            <a-input
+            <el-input
               required
-              class="form-control"
               type="text"
               id="title"
               v-model="newEstatePost.DiaChi"
@@ -62,16 +61,17 @@
           <h3>Thông tin bài viết</h3>
           <div class="form-group">
             <label for="title">Tiêu đề</label>
-            <a-input
-              class="form-control"
+            <el-input
+              label="Tiêu đề"
               required
               type="text"
-              id="title"
-              v-model="newEstatePost.TieuDe"
               placeholder="Nhập tiêu đề bài viết"
-              :minLength="30"
-              :maxLength="99"
-            />
+              v-model="newEstatePost.TieuDe"
+              maxlength="99"
+              minLength="30"
+              show-word-limit
+            >
+            </el-input>
             <span class="note">Tối thiểu 30 ký tự, tối đa 99 ký tự</span>
             <div class="errorText" v-if="$v.newEstatePost.TieuDe.$error">
               Tiêu đề cần ít nhất 30 ký tự và tối đa 99 ký tự
@@ -79,16 +79,18 @@
           </div>
           <div class="form-group">
             <label for="title">Mô tả</label>
-            <a-textarea
-              class="form-control"
+            <el-input
+              label="Mô tả"
+              :autosize="{ minRows: 5, maxRows: 10}"
               required
-              id="title"
+              type="textarea"
               placeholder="Nhập mô tả bài viết"
               v-model="newEstatePost.MoTa"
-              rows="5"
-              :minLength="30"
-              :maxLength="999"
-            ></a-textarea>
+              maxlength="999"
+              minLength="30"
+              show-word-limit
+            >
+            </el-input>
             <span class="note">Tối thiểu 30 ký tự, tối đa 999 ký tự</span>
             <div class="errorText" v-if="$v.newEstatePost.MoTa.$error">
               Mô tả cần ít nhất 30 ký tự và tối đa 999 ký tự
@@ -374,6 +376,7 @@ import CloudinaryUpload from "@/components/CloudinaryUpload.vue";
 import LocationSelect from "@/components/UIComponents/UiLocationSelect.vue";
 import { RealEstateService } from "@/services/real_estate.service";
 import { RealEstatePostStatus } from "@/constants/index";
+import { formatCurrencyToVietnamese } from "@/services/util";
 
 export default {
   name: "CreatePost",
@@ -514,27 +517,10 @@ export default {
       return '';
     },
     formattedPrice() {
-      return this.formatCurrencyToVietnamese(this.newEstatePost.MucGia);
+      return formatCurrencyToVietnamese(this.newEstatePost.MucGia);
     },
   },
   methods: {
-    formatCurrencyToVietnamese(value) {
-      if (!value) return "";
-
-      const units = [
-        { threshold: 1000000000, unit: "tỷ" },
-        { threshold: 1000000, unit: "triệu" },
-        { threshold: 1000, unit: "nghìn" },
-      ];
-
-      for (let i = 0; i < units.length; i++) {
-        if (value >= units[i].threshold) {
-          return (value / units[i].threshold).toFixed(3) + " " + units[i].unit;
-        }
-      }
-
-      return value.toString();
-    },
     locationUpdate(locationData) {
       this.location = locationData;
     },
@@ -567,9 +553,9 @@ export default {
         .then((res) => {
           if (res.status === 200) {
             this.$notification.success({
-              message: res.message,
+              message: "Tạo tin mới thành công",
             });
-            // this.$router.push("/estate/" + res.data.ID)
+            this.$router.push("/userPostManagement/list")
           } else {
             this.$notification.error({
               message: "Đăng tin thất bại",
@@ -594,6 +580,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: "Lexend", sans-serif;
 }
 
 .post,

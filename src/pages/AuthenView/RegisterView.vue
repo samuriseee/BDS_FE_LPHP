@@ -3,70 +3,60 @@
     <div class="wrapper">
       <div class="container1">
         <div class="imageBox">
-          <img class="logo" src="@/assets/image/logo.png" alt="" />
+          <img class="logo" src="@/assets/image/CityAHomes.vn-1.png" alt="" />
           <img class="person" src="@/assets/image/dangnhap.png" alt="" />
           <h4>Tìm nhà đất</h4>
-          <h4>batdongsan.com.vn dẫn lối</h4>
+          <h4>CityAHomes dẫn lối</h4>
         </div>
         <form @submit.prevent="onSubmit" class="form-style">
           <h5>Xin chào bạn!</h5>
           <h3>Đăng ký để tiếp tục</h3>
           <div class="form-group">
-            <input
-              type="text"
-              class="form-control"
-              :class="{ invalid: $v.newUser.name.$error }"
-              placeholder="Nhập họ và tên"
-              v-model="newUser.name"
-            />
+            <input type="text"
+                   class="form-control"
+                   :class="{ invalid: $v.newUser.name.$error }"
+                   placeholder="Nhập họ và tên"
+                   v-model="newUser.name" />
             <div class="errorText" v-if="$v.newUser.name.$error">
               Họ và tên nhập lỗi
             </div>
           </div>
           <div class="form-group">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Nhập số điện thoại"
-              v-model="newUser.phone"
-              :class="{ invalid: $v.newUser.phone.$error }"
-            />
+            <input type="text"
+                   class="form-control"
+                   placeholder="Nhập số điện thoại"
+                   v-model="newUser.phone"
+                   :class="{ invalid: $v.newUser.phone.$error }" />
             <div class="errorText" v-if="$v.newUser.phone.$error">
               Số điện thoại nhập lỗi
             </div>
           </div>
           <div class="form-group">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Nhập email"
-              v-model="newUser.email"
-              :class="{ invalid: $v.newUser.email.$error }"
-            />
+            <input type="text"
+                   class="form-control"
+                   placeholder="Nhập email"
+                   v-model="newUser.email"
+                   :class="{ invalid: $v.newUser.email.$error }" />
             <div class="errorText" v-if="$v.newUser.email.$error">
               Email nhập lỗi
             </div>
           </div>
           <div class="form-group">
-            <input
-              type="password"
-              class="form-control"
-              placeholder="Nhập mật khẩu"
-              v-model="newUser.password"
-              :class="{ invalid: $v.newUser.password.$error }"
-            />
+            <input type="password"
+                   class="form-control"
+                   placeholder="Nhập mật khẩu"
+                   v-model="newUser.password"
+                   :class="{ invalid: $v.newUser.password.$error }" />
             <div class="errorText" v-if="$v.newUser.password.$error">
               Password nhập lỗi
             </div>
           </div>
           <div class="form-group">
-            <input
-              type="password"
-              class="form-control"
-              placeholder="Nhập lại mật khẩu"
-              v-model="newUser.confirmPassword"
-              :class="{ invalid: $v.newUser.confirmPassword.$error }"
-            />
+            <input type="password"
+                   class="form-control"
+                   placeholder="Nhập lại mật khẩu"
+                   v-model="newUser.confirmPassword"
+                   :class="{ invalid: $v.newUser.confirmPassword.$error }" />
             <div class="errorText" v-if="$v.newUser.confirmPassword.$error">
               Vui lòng nhập mật khẩu đúng như phía trên
             </div>
@@ -74,11 +64,7 @@
           <button type="submit" class="loginButton">Đăng ký</button>
           <h6 style="margin-top: 10px">
             Bạn đã có tài khoản?
-            <router-link
-              style="text-decoration: underline; color: red"
-              to="/login"
-            >Đăng nhập</router-link
-            >
+            <router-link style="text-decoration: underline; color: red" to="/login">Đăng nhập</router-link>
           </h6>
         </form>
       </div>
@@ -144,10 +130,14 @@ export default {
         so_dien_thoai: this.newUser.phone,
         email: this.newUser.email,
         mat_khau: this.newUser.password,
+        ngay_sinh: "1999-01-01",
+        cccd: ("123456789" + Math.floor(Math.random() * 1000)).toString(),
+        trang_thai: 1,
+        is_admin: 0,
       }).then((res) => {
         this.$notification.success({
-        message: res.message,
-      });
+          message: "Đăng ký tài khoản thành công",
+        });
         this.$router.push("/login");
       }).catch((err) => {
         console.log(err);
@@ -159,6 +149,7 @@ export default {
 
 <style scoped>
 @import '../../assets/css/sharedCssLoginRes.css';
+
 .form-style {
   padding: 20px;
 }

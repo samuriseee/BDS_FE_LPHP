@@ -1,3 +1,5 @@
+<!-- eslint-disable vue/max-attributes-per-line -->
+<!-- eslint-disable eqeqeq -->
 <template>
   <CommonLayout>
     <a-layout
@@ -14,49 +16,176 @@
           height: 'auto',
         }"
       >
-        <a-input-search
-          placeholder="Trên toàn quốc"
-          size="large"
-
-        >
-          <a-button
-            slot="enterButton"
-            :style="{
-              background: '#e03c31',
-              color: 'white',
-              border: 'none',
-              fontWeight: 'bold',
-            }"
-          >
-            Tìm kiếm
-          </a-button>
-        </a-input-search>
-        <!-- <div
+        <a-card
           :style="{
-            display: 'flex',
+            background: 'rgba(0, 0, 0, 0.6)',
+            border: '15px'
           }"
         >
-          <a-select
-            mode="multiple"
+          <div>
+            <el-autocomplete
+              placeholder="Nhập địa điểm bạn đang tìm kiếm..."
+              v-model="selectedCategoriesParams.keyword"
+              class="input-with-select"
+              :fetch-suggestions="querySearch"
+              autocomplete="on"
+              :style="{
+                width: '100%',
+              }"
+            >
+              <el-select slot="prepend"
+                         placeholder="Chọn thành phố"
+                         v-model="selectedCategoriesParams.city"
+                         @change="onCityChange"
+                         :style="{
+                           minWidth: '200px',
+                           width: 'fit-content',
+                         }"
+              >
+                <el-option
+                  v-for="city in cities"
+                  :key="city.id"
+                  :label="city.name"
+                  :value="city.name"
+                >
+                </el-option>
+              </el-select>
+              <el-button
+                slot="append"
+                :style="{
+                  background: '#e03c31',
+                  color: 'white',
+                  border: 'none',
+                  fontWeight: 'bold',
+                }"
+              >
+                Tìm kiếm
+              </el-button>
+            </el-autocomplete>
+          </div>
+          <div
             :style="{
-              minWidth: '200px',
-              maxWidth: '350px',
-              overflow: 'hidden',
+              marginTop: '5px',
+              display: 'flex',
+              gap: '0px 10px',
             }"
-            placeholder="Loại Bất động sản"
-            
-            @change="handleChange"
           >
-            <a-select-option v-for="item in allBuyTypes" :key="item">
-              {{ item.LoaiBDS }}
-            </a-select-option>
-          </a-select>
-        </div> -->
+            <el-select
+              multiple
+              filterable
+              :style="{
+                minWidth: '200px',
+                overflow: 'hidden',
+              }"
+              placeholder="Loại Nhà Đất"
+              v-model="selectedCategoriesParams.LoaiBDS"
+              @change="handleChange"
+            >
+              <el-option
+                v-for="item in allCurrentRealEstateTypes"
+                :key="item.id"
+                :label="item.LoaiBDS"
+                :value="item.id"
+              >
+              </el-option>
+            </el-select>
+            <el-select placeholder="Mức Giá" v-model="selectedCategoriesParams.price">
+              <el-option
+                v-for="item in filterCateByPrice"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+            <el-select
+              placeholder="Diện Tích"
+              :style="{
+                width: '150px',
+              }"
+              v-model="selectedCategoriesParams.area"
+            >
+              <el-option
+                v-for="item in filterCateByArea"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+            <el-select
+              placeholder="Số phòng ngủ"
+              multiple
+              :style="{
+                minWidth: '100px',
+              }"
+              v-model="selectedCategoriesParams.bedrooms"
+            >
+              <el-option
+                v-for="item in 20"
+                :key="item"
+                :label="item"
+                :value="item"
+              >
+              </el-option>
+            </el-select>
+          </div>
+        </a-card>
       </a-layout-header>
-      <a-layout :style="{
-        background: 'transparent'
-      }">
+      <a-layout
+        :style="{
+          background: 'transparent',
+        }"
+      >
         <a-layout-content>
+          <el-breadcrumb
+            separator="/"
+            :style="{
+              marginLeft: '20px',
+              marginBottom: '10px',
+            }"
+          >
+            <el-breadcrumb-item>{{
+              this.businessType ? "Bán" : "Cho Thuê"
+            }}</el-breadcrumb-item>
+            <el-breadcrumb-item>{{
+              this.selectedCategoriesParams.city
+                ? this.selectedCategoriesParams.city
+                : "Toàn Quốc"
+            }}</el-breadcrumb-item>
+          </el-breadcrumb>
+          <h1
+            :style="{
+              fontSize: '24px',
+              lineHeight: '32px',
+              fontWeight: '500',
+              letterSpacing: '-0.2px',
+              color: '#2C2C2C',
+              display: 'block',
+              textAlign: 'left',
+              marginBottom: '10px',
+              marginLeft: '20px',
+            }"
+          >
+            {{
+              this.selectedCategoriesParams.city
+                ? `Nhà đất ${this.businessType ? "bán" : "cho thuê"} tại
+            ${this.selectedCategoriesParams.city}`
+                : `Nhà đất ${this.businessType ? "bán" : "cho thuê"} toàn quốc`
+            }}
+          </h1>
+          <p
+            :style="{
+              lineHeight: '32px',
+              letterSpacing: '-0.2px',
+              color: '#2C2C2C',
+              display: 'block',
+              textAlign: 'left',
+              marginLeft: '20px',
+            }"
+          >
+            Hiện đang có {{ this.realEstatesByParams.length }} bất động sản
+          </p>
           <a-row>
             <a-col v-for="estate in realEstatesByParams" :key="estate.id">
               <EstateCardOnListPage
@@ -79,7 +208,14 @@
             }"
           >
             <a-list item-layout="horizontal" :data-source="filterCateByPrice">
-              <a-list-item slot="renderItem" slot-scope="item">
+              <a-list-item
+                slot="renderItem"
+                slot-scope="item"
+                :style="{
+                  cursor: 'pointer',
+                }"
+                @click="selectedCategoriesParams.price = item.value"
+              >
                 {{ item.label }}
               </a-list-item>
             </a-list>
@@ -93,14 +229,20 @@
             }"
           >
             <a-list item-layout="horizontal" :data-source="filterCateByArea">
-              <a-list-item slot="renderItem" slot-scope="item">
+              <a-list-item
+                slot="renderItem"
+                slot-scope="item"
+                :style="{
+                  cursor: 'pointer',
+                }"
+                @click="selectedCategoriesParams.area = item.value"
+              >
                 {{ item.label }}
               </a-list-item>
             </a-list>
           </a-card>
         </a-layout-sider>
       </a-layout>
-      <a-layout-footer>Footer</a-layout-footer>
     </a-layout>
   </CommonLayout>
 </template>
@@ -112,6 +254,8 @@ import { RealEstateService } from "@/services/real_estate.service";
 import EstateCardOnListPage from "@/components/UserPageComponent/EstateCardOnListPage.vue";
 import { mapGetters } from "vuex/dist/vuex.common";
 import { RealEstatePostStatus } from "@/constants/index";
+import axios from "axios";
+import { formatCurrencyToVietnamese } from "@/services/util";
 
 export default {
   components: {
@@ -121,44 +265,165 @@ export default {
   },
   created() {
     this.getRealEstates();
+    this.getAllCities();
   },
   data() {
     return {
+      cities: [],
+      districts: [],
       allRealEstates: [],
       searchQuery: "",
       filterCateByPrice: [
-        { value: 0, label: "Tất cả" },
-        { value: 1, label: "Dưới 1 tỷ" },
-        { value: 2, label: "1 tỷ - 3 tỷ" },
-        { value: 3, label: "3 tỷ - 5 tỷ" },
-        { value: 4, label: "5 tỷ - 7 tỷ" },
-        { value: 5, label: "7 tỷ - 10 tỷ" },
-        { value: 6, label: "Trên 10 tỷ" },
+        { value: [], label: "Tất cả" },
+        {
+          value: [0, 500000000],
+          label: `Dưới ${formatCurrencyToVietnamese(500000000)}`,
+        },
+        {
+          value: [500000000, 800000000],
+          label: `${formatCurrencyToVietnamese(
+            500000000
+          )} - ${formatCurrencyToVietnamese(800000000)}`,
+        },
+        {
+          value: [800000000, 1000000000],
+          label: `${formatCurrencyToVietnamese(
+            800000000
+          )} - ${formatCurrencyToVietnamese(1000000000)}`,
+        },
+        {
+          value: [1000000000, 3000000000],
+          label: `${formatCurrencyToVietnamese(
+            1000000000
+          )} - ${formatCurrencyToVietnamese(3000000000)}`,
+        },
+        {
+          value: [3000000000, 5000000000],
+          label: `${formatCurrencyToVietnamese(
+            3000000000
+          )} - ${formatCurrencyToVietnamese(5000000000)}`,
+        },
+        {
+          value: [5000000000, 7000000000],
+          label: `${formatCurrencyToVietnamese(
+            5000000000
+          )} - ${formatCurrencyToVietnamese(7000000000)}`,
+        },
+        {
+          value: [7000000000, 10000000000],
+          label: `${formatCurrencyToVietnamese(
+            7000000000
+          )} - ${formatCurrencyToVietnamese(10000000000)}`,
+        },
+        {
+          value: [10000000000, 100000000000],
+          label: `Trên ${formatCurrencyToVietnamese(10000000000)}`,
+        },
       ],
       filterCateByArea: [
-        { value: 0, label: "Tất cả" },
-        { value: 1, label: "Dưới 30m2" },
-        { value: 2, label: "30m2 - 50m2" },
-        { value: 3, label: "50m2 - 80m2" },
-        { value: 4, label: "80m2 - 100m2" },
-        { value: 5, label: "100m2 - 150m2" },
-        { value: 6, label: "Trên 150m2" },
+        { value: [], label: "Tất cả" },
+        { value: [0, 30], label: "Dưới 30 m2" },
+        { value: [0, 50], label: "30 - 50 m2" },
+        { value: [50, 80], label: "50 - 80 m2" },
+        { value: [80, 100], label: "80 - 100 m2" },
+        { value: [100, 150], label: "100 - 150 m2" },
+        { value: [150, 200], label: "150 - 200 m2" },
       ],
-      businessType: this.$route.params.businessType,
-      realEstateType: this.$route.params.realEstateType,
+      selectedCategoriesParams: {
+        keyword: "",
+        price: [],
+        area: [],
+        city: "",
+        district: [],
+        LoaiBDS: [],
+        bedrooms: [],
+      },
     };
   },
   computed: {
     ...mapGetters(["allRealEstateType"]),
+    businessType() {
+      return this.$route.params.businessType;
+    },
+    allCurrentRealEstateTypes() {
+      return this.allRealEstateType
+        ? // eslint-disable-next-line eqeqeq
+          this.allRealEstateType.filter(
+            (item) => item.BanHayChoThue == Boolean(this.businessType)
+          )
+        : [];
+    },
+    realEstateType() {
+      return this.$route.params.realEstateType;
+    },
     realEstatesByParams() {
-      return this.allRealEstates.filter(
-        (estate) =>
-          estate.LoaiBDS === this.realEstateType &&
-          estate.TrangThai === RealEstatePostStatus.DA_DUYET
-      );
+      return this.allRealEstates?.filter((estate) => {
+        const { price, area, city, district, LoaiBDS, bedrooms } =
+          this.selectedCategoriesParams;
+        // eslint-disable-next-line eqeqeq
+        const isMatchBusinessTypeAndBeenApproved =
+          estate.bat_dong_san.TrangThai == RealEstatePostStatus.DA_DUYET &&
+          estate.loai_bat_dong_san.BanHayChoThue ==
+            Boolean(this.businessType) &&
+          (this.realEstateType == null ||
+            this.realEstateType == undefined ||
+            estate.loai_bat_dong_san.id == this.realEstateType);
+        const isPriceMatch =
+          price.length === 0 ||
+          (estate.bat_dong_san.MucGia >= price[0] &&
+            estate.bat_dong_san.MucGia <= price[1]);
+        const isAreaMatch =
+          area.length === 0 ||
+          (estate.bat_dong_san.DienTich >= area[0] &&
+            estate.bat_dong_san.DienTich <= area[1]);
+        const isCityMatch =
+          city === "" || estate.bat_dong_san.ThanhPho === city;
+        const isDistrictMatch =
+          district.length === 0 || district === estate.bat_dong_san.Quan;
+        const isLoaiBDSMatch =
+          LoaiBDS.length === 0 || LoaiBDS.includes(estate.loai_bat_dong_san.id);
+        const isBedroomsMatch =
+          bedrooms.length === 0 ||
+          bedrooms.includes(estate.bat_dong_san.SoPhongNgu);
+        return (
+          isMatchBusinessTypeAndBeenApproved &&
+          isPriceMatch &&
+          isAreaMatch &&
+          isCityMatch &&
+          isDistrictMatch &&
+          isLoaiBDSMatch &&
+          isBedroomsMatch
+        );
+      });
     },
   },
   methods: {
+    onCityChange(city) {
+      this.selectedCategoriesParams.city = city;
+      const selectedCity = this.cities.find((c) => c.name === city);
+      this.districts = selectedCity.districts;
+    },
+    querySearch(queryString, cb) {
+      if (this.selectedCategoriesParams.city) {
+        const results = queryString
+          ? this.districts.filter((district) =>
+              district.name.toLowerCase().includes(queryString.toLowerCase())
+            )
+          : this.districts;
+        const mappedResult = results.map((district) => {
+          return {
+            value: district.name,
+            label: district.name,
+          };
+        });
+        cb(mappedResult);
+      } else {
+        cb(this.cities.map((city) => ({ value: city.name, label: city.name })));
+      }
+    },
+    handleSelect(item) {
+      this.selectedCategoriesParams.district = item;
+    },
     goToEstateDetails(id) {
       this.$router.push({ name: "estate", params: { id: id } });
     },
@@ -168,11 +433,54 @@ export default {
     async getRealEstates() {
       try {
         const response = await RealEstateService.getAllRealEstates();
-        this.allRealEstates = response;
+        const mappedRealEstates = response.map((estate) => {
+          return {
+            ...estate,
+            bat_dong_san: {
+              ...estate.bat_dong_san,
+              HinhAnh: JSON.parse(estate.bat_dong_san.HinhAnh || ""),
+            },
+          };
+        });
+        this.allRealEstates = mappedRealEstates;
       } catch (error) {
         console.log(error);
       }
     },
+    async getAllCities() {
+      const API = `https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json`;
+      axios
+        .get(API)
+        .then((res) => {
+          const jsonData = res.data;
+          const cities = jsonData.map((city) => ({
+            id: city.Id,
+            name: city.Name,
+            districts: city.Districts.map((district) => ({
+              id: district.Id,
+              name: district.Name,
+              wards: district.Wards.map((ward) => ({
+                id: ward.Id,
+                name: ward.Name,
+              })),
+            })),
+          }));
+          this.cities = cities;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
 };
 </script>
+
+<style scoped>
+.el-select .el-input {
+  width: 110px;
+}
+
+.input-with-select .el-input-group__prepend {
+  background-color: #fff;
+}
+</style>

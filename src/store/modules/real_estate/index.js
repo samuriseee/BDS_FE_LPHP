@@ -17,6 +17,9 @@ export default ({
     allBuyTypes(state) {
       return state.allRealEstateType.filter((type) => type.BanHayChoThue);
     },
+    allRealEstateType(state) {
+      return state.allRealEstateType;
+    }
   },
   mutations: {
     signout(state) {

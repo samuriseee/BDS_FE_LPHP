@@ -10,7 +10,7 @@ import './thirdParty'
 
 import './scss/style.scss'
 import './assets/fonts/bebasneue.css'
-
+import 'moment/locale/zh-cn'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
 import { Vuelidate } from "vuelidate";

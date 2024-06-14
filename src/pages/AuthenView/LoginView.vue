@@ -2,10 +2,10 @@
   <CommonLayout>
     <div class="container1">
       <div class="imageBox">
-        <img class="logo" src="@/assets/image/logo.png" alt="" />
+        <img class="logo" src="@/assets/image/CityAHomes.vn-1.png" alt="" />
         <img class="person" src="@/assets/image/dangnhap.png" alt="" />
         <h4>Tìm nhà đất</h4>
-        <h4>batdongsan.com.vn dẫn lối</h4>
+        <h4>CityAHomes dẫn lối</h4>
       </div>
       <a-form @submit.prevent="onSubmit" class="loginForm">
         <h5>Xin chào bạn!</h5>

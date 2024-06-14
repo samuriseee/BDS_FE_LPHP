@@ -91,3 +91,25 @@ export function clearData (data) {
   })
   return result
 }
+
+export function formatCurrencyToVietnamese(value) {
+    if (!value) return "";
+
+    const units = [
+        { threshold: 1000000000, unit: "tỷ" },
+        { threshold: 1000000, unit: "triệu" },
+        { threshold: 1000, unit: "nghìn" },
+    ];
+
+    for (let i = 0; i < units.length; i++) {
+        if (value >= units[i].threshold) {
+            let formattedValue = (value / units[i].threshold).toFixed(1);
+            if (Number.isInteger(parseFloat(formattedValue))) {
+                formattedValue = parseInt(formattedValue);
+            }
+            return formattedValue + " " + units[i].unit;
+        }
+    }
+
+    return value.toString();
+}

@@ -2,50 +2,68 @@
   <div class="Address">
     <div class="form-group">
       <label for="title">Tỉnh, thành phố</label>
-      <a-select
-        class="form-control"
+      <el-select
         required
         v-model="selectedCity"
+        placeholder="Chọn tỉnh, thành phố"
         @change="onCityChange"
       >
-        <a-select-option v-for="city in cities" :value="city.name" :key="city.id">
-          {{ city.name }}
-        </a-select-option>
-      </a-select>
+        <el-option
+          v-for="city in cities"
+          :key="city.id"
+          :label="city.name"
+          :value="city.name"
+        >
+        </el-option>
+      </el-select>
     </div>
 
     <div class="form-group">
       <label for="title">Quận, huyện</label>
-      <a-select
-        class="form-control"
+      <el-select
         required
         v-model="selectedDistrict"
+        placeholder="Chọn quận, huyện"
         :disabled="!selectedCity"
         @change="onDistrictChange"
       >
-        <a-select-option
+        <!-- <a-select-option
           v-for="district in districts"
           :value="district.name"
           :key="district.id"
         >
           {{ district.name }}
-        </a-select-option>
-      </a-select>
+        </a-select-option> -->
+        <el-option
+          v-for="district in districts"
+          :key="district.id"
+          :label="district.name"
+          :value="district.name"
+        >
+        </el-option>
+      </el-select>
     </div>
 
     <div class="form-group">
       <label for="title">Phường</label>
-      <a-select
-        class="form-control"
+      <el-select
         required
+        placeholder="Chọn phường"
         v-model="selectedWard"
         @change="onWardChange"
         :disabled="!selectedDistrict"
       >
-        <a-select-option v-for="ward in wards" :value="ward.name" :key="ward.id">
+        <!-- <a-select-option v-for="ward in wards" :value="ward.name" :key="ward.id">
           {{ ward.name }}
-        </a-select-option>
-      </a-select>
+        </a-select-option> -->
+        <el-option
+          v-for="ward in wards"
+          :key="ward.id"
+          :label="ward.name"
+          :value="ward.name"
+        >
+        </el-option>
+      </el-select>
     </div>
   </div>
 </template>

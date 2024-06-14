@@ -12,6 +12,7 @@ module.exports = {
     'no-trailing-spaces': 1,
     'no-multiple-empty-lines': 1,
     "comma-dangle": 0,
+    "vue/max-attributes-per-line": 0,
     semi: 0,
     'space-before-function-paren': 0,
     'vue/max-attributes-per-line': [
@@ -37,6 +38,8 @@ module.exports = {
     'no-tabs': 0,
     'quotes': 0,
     'eol-last': 0,
+    'eqeqeq': 0,
+    'operator-linebreak': 0,
     // semi: [
     //   2,
     //   'never',

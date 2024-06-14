@@ -8,17 +8,11 @@ export class RealEstateService extends BaseService {
   }
 
   static async getPostById(id) {
-    assert.id(id, { required: true });
-
     try {
       const response = await this.request({ auth: true }).get(
-        `${this.entity}/${id}`
+        `${this.entity}/joined/${id}`
       );
-      const mappedResponse = response.data.map((res) => {
-        res.HinhAnh = JSON.parse(res.HinhAnh);
-        return res;
-      });
-      return mappedResponse;
+      return response.data;
     } catch (error) {
       const message = error.response.data
         ? error.response.data.error
@@ -30,13 +24,8 @@ export class RealEstateService extends BaseService {
   static async getAllRealEstates() {
     try {
       const response = await this.request().get(
-        `${this.entity}`
+        `${this.entity}/all_joined/`
       );
-      // const mappedResponse = response.data.map((res) => {
-      //   res.HinhAnh = JSON.parse(res.HinhAnh) || [];
-      //   return res;
-      // });
-      // console.log('mappedResponse', mappedResponse)
       return response.data;
     } catch (error) {
       console.log('error', error)
@@ -53,6 +42,24 @@ export class RealEstateService extends BaseService {
     try {
       const response = await this.request({ auth: true }).post(
         `${this.entity}/`,
+        data
+      );
+      return response;
+    } catch (error) {
+      const message = error.response.data
+        ? error.response.data.error
+        : error.response.statusText;
+      throw new ErrorWrapper(error, message);
+    }
+  }
+
+  static async updateRealEstatePost(id, data) {
+    assert.id(id, { required: true });
+    assert.object(data, { required: true });
+
+    try {
+      const response = await this.request({ auth: true }).put(
+        `${this.entity}/${id}`,
         data
       );
       return response;

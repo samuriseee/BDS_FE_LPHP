@@ -23,11 +23,11 @@ export async function initCurrentUserStateMiddleware (to, from, next) {
 /**
  * Check access permission to auth routes
  */
-export function checkAccessMiddleware (to, from, next) {
-  const currentUserId = !!store.getters.currentUser
+export async function checkAccessMiddleware (to, from, next) {
+  const token = localStorage.getItem('token');
   const isAuthRoute = to.matched.some(item => item.meta.isAuth)
 
-  if (isAuthRoute && currentUserId) return next()
+  if (isAuthRoute && token) return next()
   if (isAuthRoute) return next({ name: 'login' })
   next()
 }

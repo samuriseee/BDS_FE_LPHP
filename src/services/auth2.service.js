@@ -22,14 +22,9 @@ export class AuthService extends BaseService {
     }
   }
 
-  static async register({ ho_ten, phone, mat_khau, email }) {
+  static async register(newUser) {
     try {
-      const response = await this.request().post(`${this.entity}/signup`, {
-        ho_ten,
-        phone,
-        mat_khau,
-        email,
-      });
+      const response = await this.request().post(`${this.entity}/signup`, newUser);
       return response.data;
     } catch (error) {
       const message = error.response.data
