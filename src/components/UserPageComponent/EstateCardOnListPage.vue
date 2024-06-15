@@ -1,8 +1,11 @@
+<!-- eslint-disable vue/max-attributes-per-line -->
 <template>
   <div class="re_card-full" @click="$router.push('/estate/' + estate.bat_dong_san.id)">
     <div class="re_card-image">
       <div v-for="(HinhAnh, index) in getFirst4Images" :key="index">
-        <img :src="HinhAnh" alt="" />
+        <img :src="HinhAnh" alt="" :style="{
+          maxHeight: '300px'
+        }" />
       </div>
     </div>
     <div class="re_card-info">

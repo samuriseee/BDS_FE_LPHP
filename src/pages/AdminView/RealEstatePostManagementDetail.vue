@@ -216,7 +216,6 @@ export default {
             }
         },
         getImgUrl(index) {
-            console.log('idnex', index)
             return this.estateDetail.bat_dong_san.HinhAnh[index];
         },
         async changeEstateStatus(status) {

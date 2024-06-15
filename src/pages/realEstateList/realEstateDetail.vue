@@ -38,9 +38,8 @@
             </a>
             <div v-for="url in estateDetail.bat_dong_san.HinhAnh" :key="url">
               <div>
-                <img :src="url" @click="previewImage(url)" style="cursor: pointer" />
+                <img :src="url" style="cursor: pointer" />
               </div>
-
             </div>
           </a-carousel>
           <div class="detail__left--content">
@@ -67,10 +66,10 @@
                 <div class="left__specifications--item">
                   <p>Mức giá</p>
                   <h4>
-                    {{
+                    {{ estateDetail.bat_dong_san.MucGia ?
                       formatCurrencyToVietnamese(
                         estateDetail.bat_dong_san.MucGia
-                      )
+                      ) : 'Thoả thuận'
                     }}
                     {{ estateDetail.bat_dong_san.DonVi }}
                   </h4>
@@ -244,6 +243,54 @@
                 </div>
               </div>
             </div>
+
+            <div class="detail__left--chartjs">
+              <h1 :style="{
+                fontSize: '24px',
+                lineHeight: '32px',
+                fontWeight: '500',
+                letterSpacing: '-0.2px',
+                color: '#2C2C2C',
+                display: 'block',
+                textAlign: 'left',
+                marginBottom: '10px',
+              }">Biểu đồ so sánh giá các bất động sản cùng loại trong khu vực</h1>
+              <LineChartGenerator
+                :chart-options="chartOptions"
+                :chart-data="chartData"
+                :chart-id="chartId"
+                :dataset-id-key="datasetIdKey"
+                :plugins="plugins"
+                :css-classes="cssClasses"
+                :styles="styles"
+                :width="width"
+                :height="height"
+              />
+            </div>
+
+            <div class="detail__left--chartjs">
+              <h1 :style="{
+                fontSize: '24px',
+                lineHeight: '32px',
+                fontWeight: '500',
+                letterSpacing: '-0.2px',
+                color: '#2C2C2C',
+                display: 'block',
+                textAlign: 'left',
+                marginBottom: '10px',
+              }">Biểu đồ dự đoán giá tương lai</h1>
+              <LineChartGenerator
+                :chart-options="chartOptions"
+                :chart-data="chartData2"
+                :chart-id="chartId"
+                :dataset-id-key="datasetIdKey"
+                :plugins="plugins"
+                :css-classes="cssClasses"
+                :styles="styles"
+                :width="width"
+                :height="height"
+              />
+            </div>
           </div>
         </a-layout-content>
         <a-layout-sider
@@ -299,20 +346,113 @@
 </template>
 
 <script>
+import { Line as LineChartGenerator } from 'vue-chartjs/legacy'
 import CommonLayout from "@/layout/CommonLayout.vue";
 import { RealEstateService } from "@/services/real_estate.service";
 import { formatCurrencyToVietnamese } from "@/services/util";
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  LineElement,
+  LinearScale,
+  CategoryScale,
+  PointElement
+} from 'chart.js'
+
+ChartJS.register(
+  Title,
+  Tooltip,
+  Legend,
+  LineElement,
+  LinearScale,
+  CategoryScale,
+  PointElement
+)
 
 export default {
   name: "RealEstateDetail",
   components: {
     CommonLayout,
+    LineChartGenerator
   },
   data() {
     return {
       estateDetail: {},
       id: this.$route.params.id,
       selectedImagePreview: "",
+      chartId: 'line-chart',
+      datasetIdKey: 'label',
+      cssClasses: '',
+      styles: {},
+      plugins: [],
+      height: '400',
+      width: '400',
+      chartData: {
+        labels: [
+          'Q3/23',
+          'Q4/23',
+          'Q1/24',
+          'Q2/24'
+        ],
+        datasets: [
+          {
+            label: 'Giá cao nhất',
+            backgroundColor: '#C2C2C2',
+            data: [40, 41, 42, 43]
+          },
+          {
+            label: 'Giá phổ biến nhất',
+            backgroundColor: '#f87979',
+            data: [30, 31, 32, 34]
+          },
+          {
+            label: 'Giá thấp nhất',
+            backgroundColor: '#009BA1',
+            data: [25, 25, 25, 26]
+          },
+          {
+            label: 'Giá tin đang xem',
+            backgroundColor: 'red',
+            data: [34]
+          }
+        ]
+      },
+      chartData2: {
+        labels: [
+          'Q1/24',
+          'Q2/24',
+          'Q3/24',
+          'Q4/24'
+        ],
+        datasets: [
+          {
+            label: 'Giá cao nhất',
+            backgroundColor: '#C2C2C2',
+            data: [41, 45, 50, 48]
+          },
+          {
+            label: 'Giá phổ biến nhất',
+            backgroundColor: '#f87979',
+            data: [40, 39, 32, 40]
+          },
+          {
+            label: 'Giá thấp nhất',
+            backgroundColor: '#009BA1',
+            data: [30, 35, 38, 39]
+          },
+          {
+            label: 'Giá tin đang xem',
+            backgroundColor: 'red',
+            data: [34]
+          }
+        ]
+      },
+      chartOptions: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
     };
   },
   computed: {
@@ -387,7 +527,7 @@ export default {
 }
 
 .ant-carousel >>> .slick-thumb {
-  bottom: -88px;
+  bottom: -35%;
 }
 
 .ant-carousel >>> .slick-thumb li {
@@ -427,7 +567,7 @@ export default {
 }
 
 .detail__left--content {
-  margin-top: 100px;
+  margin-top: 30%;
   text-align: start;
 }
 
@@ -592,5 +732,8 @@ h4 {
   align-content: center;
   align-items: center;
   justify-content: space-evenly;
+}
+.detail__left--chartjs {
+  margin: 40px auto;
 }
 </style>

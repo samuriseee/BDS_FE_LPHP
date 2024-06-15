@@ -257,6 +257,7 @@
             display: 'flex',
             justifyContent: 'space-evenly',
             gap: '20px',
+            flexWrap: 'wrap',
           }"
         >
           <el-card
@@ -278,6 +279,7 @@
                 width: '100%',
                 objectFit: 'cover',
                 marginBottom: '12px',
+                height: '200px'
               }"
               :src="blog.bat_dong_san.HinhAnh[0]"
               alt=""
@@ -477,7 +479,7 @@ export default {
           (estate) =>
             estate.bat_dong_san.TrangThai == this.RealEstatePostStatus.DA_DUYET
         )
-        .splice(0, 8);
+        .splice(0, 6);
     },
   },
   methods: {

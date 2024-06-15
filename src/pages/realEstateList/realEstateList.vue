@@ -7,6 +7,7 @@
         width: '90%',
         margin: '0 auto',
         background: 'transparent',
+        scrollBehavior: 'smooth'
       }"
     >
       <a-layout-header
@@ -19,7 +20,7 @@
         <a-card
           :style="{
             background: 'rgba(0, 0, 0, 0.6)',
-            border: '15px'
+            border: '15px',
           }"
         >
           <div>
@@ -33,14 +34,15 @@
                 width: '100%',
               }"
             >
-              <el-select slot="prepend"
-                         placeholder="Chọn thành phố"
-                         v-model="selectedCategoriesParams.city"
-                         @change="onCityChange"
-                         :style="{
-                           minWidth: '200px',
-                           width: 'fit-content',
-                         }"
+              <el-select
+                slot="prepend"
+                placeholder="Chọn thành phố"
+                v-model="selectedCategoriesParams.city"
+                @change="onCityChange"
+                :style="{
+                  minWidth: '200px',
+                  width: 'fit-content',
+                }"
               >
                 <el-option
                   v-for="city in cities"
@@ -89,7 +91,10 @@
               >
               </el-option>
             </el-select>
-            <el-select placeholder="Mức Giá" v-model="selectedCategoriesParams.price">
+            <el-select
+              placeholder="Mức Giá"
+              v-model="selectedCategoriesParams.price"
+            >
               <el-option
                 v-for="item in filterCateByPrice"
                 :key="item.value"
@@ -135,6 +140,7 @@
       <a-layout
         :style="{
           background: 'transparent',
+          marginBottom: '40px',
         }"
       >
         <a-layout-content>
@@ -187,13 +193,25 @@
             Hiện đang có {{ this.realEstatesByParams.length }} bất động sản
           </p>
           <a-row>
-            <a-col v-for="estate in realEstatesByParams" :key="estate.id">
-              <EstateCardOnListPage
-                :estate="estate"
-                @goToEstateDetails="goToEstateDetails"
-              />
+            <a-col v-for="estate in paginatedRealEstates" :key="estate.id">
+              <a-spin :spinning="fakeLoading">
+                <EstateCardOnListPage
+                  :estate="estate"
+                  @goToEstateDetails="goToEstateDetails"
+                />
+              </a-spin>
             </a-col>
           </a-row>
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-size="itemsPerPage"
+            layout="total, prev, pager, next, jumper"
+            :total="realEstatesByParams.length"
+            background
+          >
+          </el-pagination>
         </a-layout-content>
         <a-layout-sider
           :style="{
@@ -269,6 +287,9 @@ export default {
   },
   data() {
     return {
+      fakeLoading: false,
+      currentPage: 1,
+      itemsPerPage: 5,
       cities: [],
       districts: [],
       allRealEstates: [],
@@ -356,6 +377,11 @@ export default {
     realEstateType() {
       return this.$route.params.realEstateType;
     },
+    paginatedRealEstates() {
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      return this.realEstatesByParams.slice(start, end);
+    },
     realEstatesByParams() {
       return this.allRealEstates?.filter((estate) => {
         const { price, area, city, district, LoaiBDS, bedrooms } =
@@ -377,7 +403,8 @@ export default {
           (estate.bat_dong_san.DienTich >= area[0] &&
             estate.bat_dong_san.DienTich <= area[1]);
         const isCityMatch =
-          city === "" || estate.bat_dong_san.ThanhPho === city;
+          city === "" ||
+          estate.bat_dong_san.ThanhPho == this.onlyGetNameOfCity(city);
         const isDistrictMatch =
           district.length === 0 || district === estate.bat_dong_san.Quan;
         const isLoaiBDSMatch =
@@ -398,6 +425,16 @@ export default {
     },
   },
   methods: {
+    handleSizeChange(val) {
+      this.itemsPerPage = val;
+    },
+    async handleCurrentChange(val) {
+      this.fakeLoading = true;
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      this.currentPage = val;
+      this.fakeLoading = false;
+      window.scrollTo(0, 150);
+    },
     onCityChange(city) {
       this.selectedCategoriesParams.city = city;
       const selectedCity = this.cities.find((c) => c.name === city);
@@ -445,6 +482,17 @@ export default {
         this.allRealEstates = mappedRealEstates;
       } catch (error) {
         console.log(error);
+      }
+    },
+    // input: Thành Phố Hà Nội => output: Hà Nội
+    // input: Tỉnh Hoà Khánh => output: Hoà Khánh
+    onlyGetNameOfCity(city) {
+      if (city.includes("Tỉnh")) {
+        return city.replace("Tỉnh", "").trim();
+      } else if (city.includes("Thành phố")) {
+        return city.replace("Thành phố", "").trim();
+      } else {
+        return city;
       }
     },
     async getAllCities() {
