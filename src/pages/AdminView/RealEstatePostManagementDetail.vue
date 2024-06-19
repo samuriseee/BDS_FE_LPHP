@@ -1,37 +1,88 @@
 <template>
-  <a-layout :style="{
-    width: '90%',
-    margin: '0 auto',
-    background: 'transparent',
-  }">
-    <a-layout :style="{
-      background: 'transparent'
-    }">
-      <a-layout-header :style="{
-        margin: '10px',
+  <a-layout
+    :style="{
+      width: '90%',
+      margin: '0 auto',
+      background: 'transparent',
+    }"
+  >
+    <a-layout
+      :style="{
         background: 'transparent',
-        display: 'flex',
-        justifyContent: 'space-between',
-      }">
+      }"
+    >
+      <a-layout-header
+        :style="{
+          margin: '10px',
+          background: 'transparent',
+          display: 'flex',
+          justifyContent: 'space-between',
+        }"
+      >
         <div>
-          <p> Được đăng bài ngày {{ moment(estateDetail.bat_dong_san.created_at || "").format('DD/MM/YYYY, h:mm') }} </p> 
+          <p>
+            Được đăng bài ngày
+            {{
+              moment(estateDetail.bat_dong_san.created_at || "").format(
+                "DD/MM/YYYY, h:mm"
+              )
+            }}
+          </p>
         </div>
-        <p> Người đăng bài: {{ estateDetail.nguoi_dung.ho_ten }} - {{ estateDetail.nguoi_dung.email }} - {{ estateDetail.nguoi_dung.so_dien_thoai }} </p>
-        <div v-if="estateDetail.bat_dong_san.TrangThai === RealEstatePostStatus.CHUA_DUYET">
-          <el-button @click="changeEstateStatus(RealEstatePostStatus.DA_DUYET)" type="success">Duyệt bài</el-button>
-          <el-button @click="changeEstateStatus(RealEstatePostStatus.KHONG_DUYET)" type="info">Không xác nhận bài</el-button>
+        <p>
+          Người đăng bài: {{ estateDetail.nguoi_dung.ho_ten }} -
+          {{ estateDetail.nguoi_dung.email }} -
+          {{ estateDetail.nguoi_dung.so_dien_thoai }}
+        </p>
+        <div
+          v-if="
+            estateDetail.bat_dong_san.TrangThai ===
+            RealEstatePostStatus.CHUA_DUYET
+          "
+        >
+          <el-button
+            @click="changeEstateStatus(RealEstatePostStatus.DA_DUYET)"
+            type="success"
+            >Duyệt bài</el-button
+          >
+          <el-button
+            @click="changeEstateStatus(RealEstatePostStatus.KHONG_DUYET)"
+            type="info"
+            >Không xác nhận bài</el-button
+          >
         </div>
-        <div v-else-if="estateDetail.bat_dong_san.TrangThai === RealEstatePostStatus.DA_DUYET">
-          <el-button @click="changeEstateStatus(RealEstatePostStatus.VI_PHAM)" type="danger">Đánh dấu vi phạm</el-button>
+        <div
+          v-else-if="
+            estateDetail.bat_dong_san.TrangThai ===
+            RealEstatePostStatus.DA_DUYET
+          "
+        >
+          <el-button
+            @click="changeEstateStatus(RealEstatePostStatus.VI_PHAM)"
+            type="danger"
+            >Đánh dấu vi phạm</el-button
+          >
         </div>
       </a-layout-header>
       <a-layout-content>
         <div>
-          <!-- <a-carousel class="imageBox" arrows dots-class="slick-dots slick-thumb">
-            <div slot="prevArrow" class="custom-slick-arrow" style="left: 10px; zIndex: 1">
+          <a-carousel
+            class="imageBox"
+            arrows
+            dots-class="slick-dots slick-thumb"
+          >
+            <div
+              slot="prevArrow"
+              class="custom-slick-arrow"
+              style="left: 10px; zindex: 1"
+            >
               <a-icon type="left-circle" />
             </div>
-            <div slot="nextArrow" class="custom-slick-arrow" style="right: 10px">
+            <div
+              slot="nextArrow"
+              class="custom-slick-arrow"
+              style="right: 10px"
+            >
               <a-icon type="right-circle" />
             </div>
             <a slot="customPaging" slot-scope="props">
@@ -40,19 +91,17 @@
             <div v-for="url in estateDetail.bat_dong_san.HinhAnh" :key="url">
               <img :src="url" />
             </div>
-          </a-carousel> -->
-          <el-carousel trigger="click">
-            <el-carousel-item v-for="url in estateDetail.bat_dong_san.HinhAnh" :key="url">
-              <img :src="url" />
-            </el-carousel-item>
-          </el-carousel>
+          </a-carousel>
         </div>
         <div class="detail__left--content">
           <div class="detail__left--title">
             <p class="breadcrumb">
-              {{ (estateDetail.bat_dong_san.BanHayChoThue = 1 ? "Bán" : "Thuê") }} / {{
-                estateDetail.bat_dong_san.ThanhPho
-              }} / {{ estateDetail.bat_dong_san.Quan }} / {{ estateDetail.bat_dong_san.Phuong }}
+              {{
+                (estateDetail.bat_dong_san.BanHayChoThue = 1 ? "Bán" : "Thuê")
+              }}
+              / {{ estateDetail.bat_dong_san.ThanhPho }} /
+              {{ estateDetail.bat_dong_san.Quan }} /
+              {{ estateDetail.bat_dong_san.Phuong }}
             </p>
             <h3>
               {{ estateDetail.bat_dong_san.TieuDe }}
@@ -67,7 +116,11 @@
             <div style="display: flex">
               <div class="left__specifications--item">
                 <p>Mức giá</p>
-                <h4>{{ formatCurrencyToVietnamese(estateDetail.bat_dong_san.MucGia) }} {{ estateDetail.bat_dong_san.DonVi }}
+                <h4>
+                  {{
+                    formatCurrencyToVietnamese(estateDetail.bat_dong_san.MucGia)
+                  }}
+                  {{ estateDetail.bat_dong_san.DonVi }}
                 </h4>
               </div>
 
@@ -84,28 +137,34 @@
 
             <div class="left__specifications--icon">
               <p>
-                <a-icon type="share-alt"
-                        :style="{
-                          fontSize: '28px',
-                          color: '#b3b3b3',
-                          margin: '0 7px',
-                        }" />
+                <a-icon
+                  type="share-alt"
+                  :style="{
+                    fontSize: '28px',
+                    color: '#b3b3b3',
+                    margin: '0 7px',
+                  }"
+                />
               </p>
               <p>
-                <a-icon type="phone"
-                        :style="{
-                          fontSize: '28px',
-                          color: '#b3b3b3',
-                          margin: '0 7px',
-                        }" />
+                <a-icon
+                  type="phone"
+                  :style="{
+                    fontSize: '28px',
+                    color: '#b3b3b3',
+                    margin: '0 7px',
+                  }"
+                />
               </p>
               <p>
-                <a-icon type="heart"
-                        :style="{
-                          fontSize: '28px',
-                          color: '#b3b3b3',
-                          margin: '0 7px',
-                        }" />
+                <a-icon
+                  type="heart"
+                  :style="{
+                    fontSize: '28px',
+                    color: '#b3b3b3',
+                    margin: '0 7px',
+                  }"
+                />
               </p>
             </div>
           </div>
@@ -126,41 +185,70 @@
               </div>
               <div class="functional-item">
                 <b>Mức giá</b>
-                <p>{{ formatCurrencyToVietnamese(estateDetail.bat_dong_san.MucGia) }} {{ estateDetail.bat_dong_san.DonVi }}</p>
+                <p>
+                  {{
+                    formatCurrencyToVietnamese(estateDetail.bat_dong_san.MucGia)
+                  }}
+                  {{ estateDetail.bat_dong_san.DonVi }}
+                </p>
               </div>
               <div class="functional-item">
                 <b>Giấy tờ pháp lý</b>
                 <p>{{ estateDetail.bat_dong_san.GiayToPhapLy }}</p>
               </div>
-              <div class="functional-item" v-if="estateDetail.bat_dong_san.SoPhongNgu">
+              <div
+                class="functional-item"
+                v-if="estateDetail.bat_dong_san.SoPhongNgu"
+              >
                 <b>Số phòng ngủ</b>
                 <p>{{ estateDetail.bat_dong_san.SoPhongNgu }}</p>
               </div>
-              <div class="functional-item" v-if="estateDetail.bat_dong_san.SoPhongTam">
+              <div
+                class="functional-item"
+                v-if="estateDetail.bat_dong_san.SoPhongTam"
+              >
                 <b>Số phòng tắm</b>
                 <p>{{ estateDetail.bat_dong_san.SoPhongTam }}</p>
               </div>
-              <div class="functional-item" v-if="estateDetail.bat_dong_san.SoTang">
+              <div
+                class="functional-item"
+                v-if="estateDetail.bat_dong_san.SoTang"
+              >
                 <b>Số tầng</b>
                 <p>{{ estateDetail.bat_dong_san.SoTang }}</p>
               </div>
-              <div class="functional-item" v-if="estateDetail.bat_dong_san.NoiThat">
+              <div
+                class="functional-item"
+                v-if="estateDetail.bat_dong_san.NoiThat"
+              >
                 <b>Nội Thất</b>
                 <p>{{ estateDetail.bat_dong_san.NoiThat }}</p>
               </div>
-              <div class="functional-item" v-if="estateDetail.bat_dong_san.HuongBanCong">
+              <div
+                class="functional-item"
+                v-if="estateDetail.bat_dong_san.HuongBanCong"
+              >
                 <b>Hướng ban công</b>
                 <p>{{ estateDetail.bat_dong_san.HuongBanCong }}</p>
               </div>
-              <div class="functional-item" v-if="estateDetail.bat_dong_san.HuongNha">
+              <div
+                class="functional-item"
+                v-if="estateDetail.bat_dong_san.HuongNha"
+              >
                 <b>Hướng Nhà</b>
                 <p>{{ estateDetail.bat_dong_san.HuongNha }}</p>
               </div>
-              <div class="functional-item" v-if="estateDetail.bat_dong_san.DuongVao">
+              <div
+                class="functional-item"
+                v-if="estateDetail.bat_dong_san.DuongVao"
+              >
                 <b>Đường vào</b>
                 <p>{{ estateDetail.bat_dong_san.DuongVao }} m²</p>
               </div>
-              <div class="functional-item" v-if="estateDetail.bat_dong_san.MatTien">
+              <div
+                class="functional-item"
+                v-if="estateDetail.bat_dong_san.MatTien"
+              >
                 <b>Mặt tiền</b>
                 <p>{{ estateDetail.bat_dong_san.MatTien }} m²</p>
               </div>
@@ -179,256 +267,263 @@ import { formatCurrencyToVietnamese } from "@/services/util";
 import { RealEstatePostStatus } from "@/constants";
 import moment from "moment";
 export default {
-    name: "AdminRealEstatePostManagementDetail",
-    components: {
-        AdminLayout,
+  name: "AdminRealEstatePostManagementDetail",
+  components: {
+    AdminLayout,
+  },
+  data() {
+    return {
+      estateDetail: {},
+      id: this.$route.params.id,
+      RealEstatePostStatus,
+    };
+  },
+  computed: {
+    modifiedDescription() {
+      return this.estateDetail.bat_dong_san.MoTa.replace(/\.\s/g, "<br>");
     },
-    data() {
-        return {
-            estateDetail: {},
-            id: this.$route.params.id,
-            RealEstatePostStatus,
+  },
+  created() {
+    this.getEstateDetail(this.id);
+  },
+  methods: {
+    moment,
+    formatCurrencyToVietnamese,
+    async getEstateDetail(id) {
+      try {
+        const response = await RealEstateService.getPostById(id);
+        this.estateDetail = {
+          ...response,
+          bat_dong_san: {
+            ...response.bat_dong_san,
+            HinhAnh: JSON.parse(response.bat_dong_san.HinhAnh),
+          },
         };
+      } catch (error) {
+        console.log(error);
+      }
     },
-    computed: {
-        modifiedDescription() {
-            return this.estateDetail.bat_dong_san.MoTa.replace(/\.\s/g, "<br>");
-        },
+    getImgUrl(index) {
+      return this.estateDetail.bat_dong_san.HinhAnh[index];
     },
-    created() {
+    async changeEstateStatus(status) {
+      try {
+        const updateEstatePayload = {
+          ...this.estateDetail.bat_dong_san,
+          HinhAnh: JSON.stringify(this.estateDetail.bat_dong_san.HinhAnh),
+          TrangThai: status,
+        };
+        await RealEstateService.updateRealEstatePost(
+          this.id,
+          updateEstatePayload
+        );
+        this.$message.success("Cập nhật bài đăng thành công");
         this.getEstateDetail(this.id);
+      } catch (error) {
+        console.log(error);
+        this.$message.error("Cập nhật bài đăng thất bại");
+      }
     },
-    methods: {
-        moment,
-        formatCurrencyToVietnamese,
-        async getEstateDetail(id) {
-            try {
-                const response = await RealEstateService.getPostById(id);
-                this.estateDetail = {
-                    ...response,
-                    bat_dong_san: {
-                      ...response.bat_dong_san,
-                      HinhAnh: JSON.parse(response.bat_dong_san.HinhAnh),
-                    }
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        },
-        getImgUrl(index) {
-            return this.estateDetail.bat_dong_san.HinhAnh[index];
-        },
-        async changeEstateStatus(status) {
-            try {
-                const updateEstatePayload = {
-                    ...this.estateDetail.bat_dong_san,
-                    HinhAnh: JSON.stringify(this.estateDetail.bat_dong_san.HinhAnh),
-                    TrangThai: status,
-                }
-                await RealEstateService.updateRealEstatePost(this.id, updateEstatePayload);
-                this.$message.success("Cập nhật bài đăng thành công");
-                this.getEstateDetail(this.id);
-            } catch (error) {
-                console.log(error);
-                this.$message.error("Cập nhật bài đăng thất bại");
-            }
-        },
-    },
+  },
 };
 </script>
 
 <style scoped>
-
 .imageBox {
-    margin: 0 auto;
-    position: relative;
-    width: 100%;
-    max-width: 700px;
-    height: auto;
-    z-index: 1;
-    display: flex;
-    transition-property: transform;
-    box-sizing: content-box;
-    background: #f2f2f2;
+  margin: 0 auto;
+  position: relative;
+  width: 100%;
+  max-width: 700px;
+  height: auto;
+  z-index: 1;
+  display: flex;
+  transition-property: transform;
+  box-sizing: content-box;
+  background: #f2f2f2;
 }
 
-.ant-carousel>>>.slick-dots {
-    height: auto;
+.ant-carousel >>> .slick-dots {
+  height: auto;
 }
 
-.ant-carousel>>>.slick-slider {
-    display: flex;
-    align-items: center;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 59%, rgba(0, 0, 0, 0.65) 100%);
+.ant-carousel >>> .slick-slider {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0) 59%,
+    rgba(0, 0, 0, 0.65) 100%
+  );
 }
 
-.ant-carousel>>>.slick-slide img {
-    display: block;
-    margin: auto;
-    height: 500px;
-    max-width: 100%;
-    object-fit: cover;
+.ant-carousel >>> .slick-slide img {
+  display: block;
+  margin: auto;
+  height: 500px;
+  max-width: 100%;
+  object-fit: cover;
 }
 
-.ant-carousel>>>.slick-thumb {
-    bottom: -88px;
+.ant-carousel >>> .slick-thumb {
+  bottom: -88px;
 }
 
-.ant-carousel>>>.slick-thumb li {
-    width: 107px;
-    height: 80px;
+.ant-carousel >>> .slick-thumb li {
+  width: 107px;
+  height: 80px;
 }
 
-.ant-carousel>>>.slick-thumb li img {
-    width: 100%;
-    height: 100%;
-    filter: grayscale(100%);
+.ant-carousel >>> .slick-thumb li img {
+  width: 100%;
+  height: 100%;
+  filter: grayscale(100%);
 }
 
-.ant-carousel>>>.slick-thumb li.slick-active img {
-    filter: grayscale(0%);
+.ant-carousel >>> .slick-thumb li.slick-active img {
+  filter: grayscale(0%);
 }
 
-.ant-carousel>>>.custom-slick-arrow {
-    width: 25px;
-    height: 25px;
-    font-size: 25px;
-    color: #fff;
-    background-color: rgba(0, 0, 0, 0.11);
-    opacity: 0.3;
+.ant-carousel >>> .custom-slick-arrow {
+  width: 25px;
+  height: 25px;
+  font-size: 25px;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.11);
+  opacity: 0.3;
 }
 
-.ant-carousel>>>.custom-slick-arrow:before {
-    display: none;
+.ant-carousel >>> .custom-slick-arrow:before {
+  display: none;
 }
 
-.ant-carousel>>>.custom-slick-arrow:hover {
-    opacity: 0.5;
+.ant-carousel >>> .custom-slick-arrow:hover {
+  opacity: 0.5;
 }
 
-.ant-carousel>>>.slick-slide h3 {
-    color: #000000;
+.ant-carousel >>> .slick-slide h3 {
+  color: #000000;
 }
 
 .detail__left--content {
-    margin-top: 100px;
-    text-align: start;
+  margin-top: 100px;
+  text-align: start;
 }
 
 .detail__left--title {
-    margin-top: 5px;
+  margin-top: 5px;
 }
 
 .detail__left--title p {
-    font-size: 15px;
-    color: #848484;
+  font-size: 15px;
+  color: #848484;
 }
 
 .detail__left--title p span {
-    font-size: 15px;
-    color: #000000;
+  font-size: 15px;
+  color: #000000;
 }
 
 .detail__left--title h3 {
-    font-family: "Lexend Medium", Roboto, Arial !important;
-    font-size: 24px;
-    line-height: 32px;
-    font-weight: normal !important;
-    letter-spacing: -0.2px;
-    color: #2c2c2c;
-    display: block;
+  font-family: "Lexend Medium", Roboto, Arial !important;
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: normal !important;
+  letter-spacing: -0.2px;
+  color: #2c2c2c;
+  display: block;
 }
 
 .detail__left--specifications {
-    display: flex;
-    margin: 20px 0;
-    border-top: 1px solid #f2f2f2;
-    border-bottom: 1px solid #f2f2f2;
-    padding: 15px 0px;
-    box-sizing: border-box;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  margin: 20px 0;
+  border-top: 1px solid #f2f2f2;
+  border-bottom: 1px solid #f2f2f2;
+  padding: 15px 0px;
+  box-sizing: border-box;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .left__specifications--item {
-    margin-right: 50px;
+  margin-right: 50px;
 }
 
 .left__specifications--item p {
-    font-size: 15px;
-    font-weight: 500;
-    color: #b3b3b3;
+  font-size: 15px;
+  font-weight: 500;
+  color: #b3b3b3;
 }
 
 h4 {
-    font-size: 16px;
-    font-weight: 700;
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .left__specifications--item span {
-    font-size: 10px;
-    color: #b3b3b3;
+  font-size: 10px;
+  color: #b3b3b3;
 }
 
 .left__specifications--icon {
-    display: flex;
+  display: flex;
 }
 
 .left__specifications--icon p {
-    margin: 0 7px;
+  margin: 0 7px;
 }
 
 .detail__left--description h4,
 .detail__left--functional h4 {
-    font-family: "Lexend Medium", Roboto, Arial !important;
-    font-size: 18px;
-    line-height: 28px;
-    font-weight: bold;
-    letter-spacing: -0.2px;
-    color: #2c2c2c;
-    display: block;
-    margin-bottom: 10px;
+  font-family: "Lexend Medium", Roboto, Arial !important;
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: bold;
+  letter-spacing: -0.2px;
+  color: #2c2c2c;
+  display: block;
+  margin-bottom: 10px;
 }
 
 .description__content {
-    font-family: "Roboto Regular", Roboto, Arial !important;
-    font-size: 16px;
-    line-height: 30px;
-    font-weight: normal !important;
+  font-family: "Roboto Regular", Roboto, Arial !important;
+  font-size: 16px;
+  line-height: 30px;
+  font-weight: normal !important;
 }
 
 .description__content span {
-    font-weight: 700;
-    font-size: 14px;
-    padding: 7px;
-    background: #ccc;
-    border-radius: 5px;
-    margin-right: 5px;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 7px;
+  background: #ccc;
+  border-radius: 5px;
+  margin-right: 5px;
 }
 
 .description__content span::after {
-    content: "Hiện số";
-    color: white;
-    font-size: 13px;
-    font-weight: 700;
-    border: 1px solid #000000;
-    padding: 5px;
-    margin-left: 7px;
-    background: #2c2c2c;
-    margin-top: 10px;
-    border-radius: 5px;
-    cursor: pointer;
+  content: "Hiện số";
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid #000000;
+  padding: 5px;
+  margin-left: 7px;
+  background: #2c2c2c;
+  margin-top: 10px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 .functional_flex {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 .functional-item {
-    min-width: 333px;
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    font-size: 17px;
+  min-width: 333px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  font-size: 17px;
 }
 </style>

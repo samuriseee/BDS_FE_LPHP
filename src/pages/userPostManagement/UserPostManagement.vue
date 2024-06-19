@@ -1,52 +1,78 @@
 <template>
   <div class="container">
-    <h1 :style="{
-      fontSize: '24px',
-      lineHeight: '32px',
-      fontWeight: '500',
-      letterSpacing: '-0.2px',
-      color: '#2C2C2C',
-      display: 'block',
-      textAlign: 'left',
-      marginBottom: '10px',
-    }">
+    <h1
+      :style="{
+        fontSize: '24px',
+        lineHeight: '32px',
+        fontWeight: '500',
+        letterSpacing: '-0.2px',
+        color: '#2C2C2C',
+        display: 'block',
+        textAlign: 'left',
+        marginBottom: '10px',
+      }"
+    >
       Danh sách tin
     </h1>
-    <el-tabs v-model="activeName"
-             @tab-click="handleClick"
-             :style="{
-               width: '100%',
-             }">
+    <el-tabs
+      v-model="activeName"
+      @tab-click="handleClick"
+      :style="{
+        width: '100%',
+      }"
+    >
       <el-tab-pane label="Tất cả" name="first">
-        <a-row>
-          <a-col v-for="estate in allRealEstatesOfCurrentUser" :key="estate.id">
-            <RealEstateCardItem :estate="estate" @goToEstateDetails="goToEstateDetails" />
-          </a-col>
-        </a-row>
+        <a-spin :spinning="loading">
+          <a-row>
+            <a-col
+              v-for="estate in allRealEstatesOfCurrentUser"
+              :key="estate.id"
+            >
+              <RealEstateCardItem
+                :estate="estate"
+                @goToEstateDetails="goToEstateDetails"
+              />
+            </a-col>
+          </a-row>
+        </a-spin>
       </el-tab-pane>
       <el-tab-pane label="Chờ được duyệt" name="second">
-        <a-row>
-          <a-col v-for="estate in waitingApproveRealEstates" :key="estate.id">
-            <RealEstateCardItem :estate="estate" @goToEstateDetails="goToEstateDetails" />
-          </a-col>
-        </a-row>
+        <a-spin :spinning="loading">
+          <a-row>
+            <a-col v-for="estate in waitingApproveRealEstates" :key="estate.id">
+              <RealEstateCardItem
+                :estate="estate"
+                @goToEstateDetails="goToEstateDetails"
+              />
+            </a-col>
+          </a-row>
+        </a-spin>
       </el-tab-pane>
       <el-tab-pane label="Đang hiển thị" name="fourth">
-        <a-row>
-          <a-col v-for="estate in showingRealEstates" :key="estate.id">
-            <RealEstateCardItem :estate="estate" @goToEstateDetails="goToEstateDetails" />
-          </a-col>
-        </a-row>
+        <a-spin :spinning="loading">
+          <a-row>
+            <a-col v-for="estate in showingRealEstates" :key="estate.id">
+              <RealEstateCardItem
+                :estate="estate"
+                @goToEstateDetails="goToEstateDetails"
+              />
+            </a-col>
+          </a-row>
+        </a-spin>
       </el-tab-pane>
       <el-tab-pane label="Bài viết không duyệt / vi phạm" name="third">
-        <a-row>
-          <a-col v-for="estate in expiredRealEstates" :key="estate.id">
-            <RealEstateCardItem :estate="estate" @goToEstateDetails="goToEstateDetails" />
-          </a-col>
-        </a-row>
+        <a-spin :spinning="loading">
+          <a-row>
+            <a-col v-for="estate in expiredRealEstates" :key="estate.id">
+              <RealEstateCardItem
+                :estate="estate"
+                @goToEstateDetails="goToEstateDetails"
+              />
+            </a-col>
+          </a-row>
+        </a-spin>
       </el-tab-pane>
     </el-tabs>
-
   </div>
 </template>
 
@@ -61,7 +87,7 @@ export default {
   data() {
     return {
       loading: false,
-      activeName: 'first',
+      activeName: "first",
       allRealEstatesOfCurrentUser: [],
     };
   },
@@ -73,15 +99,25 @@ export default {
     ...mapGetters(["currentUser"]),
     waitingApproveRealEstates() {
       // eslint-disable-next-line eqeqeq
-      return this.allRealEstatesOfCurrentUser.filter((estate) => estate.bat_dong_san.TrangThai == RealEstatePostStatus.CHUA_DUYET);
+      return this.allRealEstatesOfCurrentUser.filter(
+        (estate) =>
+          estate.bat_dong_san.TrangThai == RealEstatePostStatus.CHUA_DUYET
+      );
     },
     expiredRealEstates() {
       // eslint-disable-next-line eqeqeq
-      return this.allRealEstatesOfCurrentUser.filter((estate) => estate.bat_dong_san.TrangThai == RealEstatePostStatus.KHONG_DUYET || estate.TrangThai === RealEstatePostStatus.VI_PHAM);
+      return this.allRealEstatesOfCurrentUser.filter(
+        (estate) =>
+          estate.bat_dong_san.TrangThai == RealEstatePostStatus.KHONG_DUYET ||
+          estate.TrangThai === RealEstatePostStatus.VI_PHAM
+      );
     },
     showingRealEstates() {
       // eslint-disable-next-line eqeqeq
-      return this.allRealEstatesOfCurrentUser.filter((estate) => estate.bat_dong_san.TrangThai == RealEstatePostStatus.DA_DUYET);
+      return this.allRealEstatesOfCurrentUser.filter(
+        (estate) =>
+          estate.bat_dong_san.TrangThai == RealEstatePostStatus.DA_DUYET
+      );
     },
   },
   mounted() {
@@ -91,10 +127,33 @@ export default {
     handleClick(tab, event) {
       console.log(tab, event);
     },
-     async getRealEstates() {
+    goToEstateDetails(estate) {
+      if (estate.bat_dong_san.TrangThai == RealEstatePostStatus.CHUA_DUYET) {
+        this.$notification.success({
+          message: "Bất động sản này chưa được duyệt",
+        });
+      }
+      if (estate.bat_dong_san.TrangThai == RealEstatePostStatus.KHONG_DUYET) {
+        this.$notification.success({
+          message: "Bất động sản này không được duyệt bài",
+        });
+      }
+      if (estate.bat_dong_san.TrangThai == RealEstatePostStatus.VI_PHAM) {
+        this.$notification.success({
+          message:
+            "Bất động sản này vi phạm luật của trang đã gỡ xuống trang web",
+        });
+      } else {
+        this.$router.push(`/estate/${estate.bat_dong_san.id}`);
+      }
+    },
+    async getRealEstates() {
       try {
+        this.loading = true;
         const response = await RealEstateService.getAllRealEstates();
-        const postOfCurrentUser = response.filter((estate) => estate.nguoi_dung.id === this.currentUser?.id);
+        const postOfCurrentUser = response.filter(
+          (estate) => estate.nguoi_dung.id === this.currentUser?.id
+        );
         const mappedRealEstates = postOfCurrentUser.map((estate) => {
           return {
             ...estate,
@@ -105,11 +164,12 @@ export default {
           };
         });
         this.allRealEstatesOfCurrentUser = mappedRealEstates;
+        this.loading = false;
       } catch (error) {
         console.log(error);
       }
     },
-  }
+  },
 };
 </script>
 

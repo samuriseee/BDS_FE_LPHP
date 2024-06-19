@@ -2,7 +2,6 @@
   <HomeLayout>
     <div class="home">
       <div class="hero-section">
-        
         <el-carousel trigger="click" class="full-width-carousel" height="600px">
           <el-carousel-item v-for="url in imgUrls" :key="url">
             <img :src="url" alt="" />
@@ -128,8 +127,8 @@
                   {{ blog.title }}
                 </h3>
               </el-card>
-            </div></el-tab-pane
-          >
+            </div>
+          </el-tab-pane>
           <el-tab-pane label="BĐS Tin Tức" name="third">
             <div
               :style="{
@@ -178,8 +177,8 @@
                   {{ blog.title }}
                 </h3>
               </el-card>
-            </div></el-tab-pane
-          >
+            </div>
+          </el-tab-pane>
           <el-tab-pane label="BĐS Hà Nội" name="fourth">
             <div
               :style="{
@@ -228,8 +227,8 @@
                   {{ blog.title }}
                 </h3>
               </el-card>
-            </div></el-tab-pane
-          >
+            </div>
+          </el-tab-pane>
         </el-tabs>
       </div>
       <div
@@ -255,31 +254,32 @@
         <div
           :style="{
             display: 'flex',
-            justifyContent: 'space-evenly',
             gap: '20px',
             flexWrap: 'wrap',
+            justifyContent: 'space-between',
+            cursor: 'pointer',
           }"
         >
           <el-card
             v-for="blog in getApprovedRealEstate"
-            :key="blog.id"
+            :key="blog.bat_dong_san.id"
             :style="{
               display: 'flex',
               justifyContent: 'space-between',
               gap: '20px',
               textAlign: 'left',
-              width: '33%',
-              maxWidth: '300px',
+              width: '23%',
             }"
             :body-style="{ padding: '0px' }"
             shadow="hover"
+            @click.native="goToEstateDetails(blog.bat_dong_san.id)"
           >
             <img
               :style="{
                 width: '100%',
                 objectFit: 'cover',
                 marginBottom: '12px',
-                height: '200px'
+                height: '200px',
               }"
               :src="blog.bat_dong_san.HinhAnh[0]"
               alt=""
@@ -479,11 +479,14 @@ export default {
           (estate) =>
             estate.bat_dong_san.TrangThai == this.RealEstatePostStatus.DA_DUYET
         )
-        .splice(0, 6);
+        .splice(0, 8);
     },
   },
   methods: {
     formatCurrencyToVietnamese,
+    goToEstateDetails(id) {
+      this.$router.push("/estate/" + id);
+    },
     async getRealEstates() {
       try {
         const response = await RealEstateService.getAllRealEstates();
@@ -509,14 +512,17 @@ export default {
 .home {
   width: 100%;
   font-family: "Lexend Medium", Roboto, Arial !important;
+
   .hero-section {
     display: flex;
     justify-content: center;
     align-items: flex-start;
     position: relative;
+
     .full-width-carousel {
       width: 100%;
     }
+
     img {
       width: 100%;
       height: auto;
@@ -524,6 +530,7 @@ export default {
       filter: brightness(50%);
     }
   }
+
   .content-section {
     padding: 20px;
     text-align: center;

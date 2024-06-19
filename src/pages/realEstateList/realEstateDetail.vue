@@ -375,7 +375,7 @@ export default {
   name: "RealEstateDetail",
   components: {
     CommonLayout,
-    LineChartGenerator
+    LineChartGenerator                                                                                                                               
   },
   data() {
     return {
@@ -527,7 +527,7 @@ export default {
 }
 
 .ant-carousel >>> .slick-thumb {
-  bottom: -35%;
+  bottom: -20%;
 }
 
 .ant-carousel >>> .slick-thumb li {
@@ -567,7 +567,7 @@ export default {
 }
 
 .detail__left--content {
-  margin-top: 30%;
+  margin-top: 20%;
   text-align: start;
 }
 

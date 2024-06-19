@@ -59,6 +59,20 @@ export default {
   components: {
     UiLinearLoading,
   },
+  props: {
+    value: {
+      type: Array,
+      default: () => [],
+    },
+  },
+  watch: {
+    value: {
+      handler(newValue) {
+        this.imageUrls = newValue;
+      },
+      immediate: true,
+    },
+  },
   methods: {
     openFileInput() {
       this.$refs.fileInput.click();

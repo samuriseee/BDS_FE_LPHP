@@ -48,7 +48,7 @@
                   <router-link to="/admin/user-management">Quản lý người dùng</router-link>
                 </a-menu-item>
                 <a-menu-item>
-                  <router-link to="/admin/account-management">Quản lý tài khoản</router-link>
+                  <router-link to="/admin/account-management">Quản lý nhân viên</router-link>
                 </a-menu-item>
                 <a-menu-item>
                   <router-link to="/admin/post-management">Quản lý tin đăng</router-link>
@@ -85,11 +85,11 @@
             </div>
             <template #overlay>
               <a-menu>
-                <a-menu-item :style="menuItemStyle">
+                <a-menu-item :style="menuItemStyle" @click="toPostManagement()">
                   <a-icon :style="iconStyle" type="unordered-list" />
                   <a>Quản lý tin đăng</a>
                 </a-menu-item>
-                <a-menu-item :style="menuItemStyle">
+                <a-menu-item :style="menuItemStyle" @click="toProfile()">
                   <a-icon :style="iconStyle" type="user" />
                   <a>Thay đổi thông tin cá nhân</a>
                 </a-menu-item>
@@ -164,6 +164,12 @@ export default {
   methods: {
     ToHome() {
       this.$router.push("/");
+    },
+    toPostManagement() {
+      this.$router.push("/userPostManagement/list");
+    },
+    toProfile() {
+      this.$router.push("/userPostManagement/profile")
     },
     logout() {
       this.$store.dispatch("logout");

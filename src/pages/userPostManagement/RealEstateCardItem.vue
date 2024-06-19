@@ -1,5 +1,7 @@
 <template>
-  <div class="real-estate-card-item">
+  <div class="real-estate-card-item" 
+    @click="handleViewDetail"
+  >
     <el-carousel class="real-estate-card-item__image">
       <el-carousel-item v-for="(item, index) in estate.bat_dong_san.HinhAnh" :key="index">
         <img :src="item" />
@@ -52,7 +54,9 @@
         color: 'rgb(0, 155, 161)',
         opacity: 1,
         border: '1px solid rgb(0, 155, 161)'
-      }"><i class="el-icon-edit"></i> Sửa tin</el-button>
+      }"
+        @click="handleEditRealEstate"
+      ><i class="el-icon-edit"></i> Sửa tin</el-button>
     </div>
   </div>
 
@@ -70,6 +74,7 @@ export default {
       type: Object,
       default: () => {},
     },
+
   },
   data() {
     return {
@@ -81,6 +86,12 @@ export default {
   },
   methods: {
     moment,
+    handleViewDetail() {
+      this.$emit("goToEstateDetails", this.estate);
+    },
+    handleEditRealEstate() {
+      this.$router.push("/userPostManagement/edit/" + this.estate.bat_dong_san.id);
+    }
   },
 };
 </script>
@@ -109,6 +120,7 @@ export default {
 .real-estate-card-item__content {
     text-align: left;
     padding: 0 20px;
+    min-width: 800px;
 }
 
 .real-estate-card-item__title {

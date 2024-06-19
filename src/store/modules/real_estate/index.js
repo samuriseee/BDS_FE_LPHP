@@ -1,11 +1,12 @@
-// import { RealEstateService } from "@/services/real_estate.service";
 import { RealEstateTypeService } from "@/services/real_estate_type.service";
 import { AuthService } from "@/services/auth2.service";
+import { RealEstateService } from "@/services/real_estate.service";
 
-export default ({
+export default {
   state: {
     currentUser: null,
     allRealEstateType: [],
+    allRealEstates: [],
   },
   getters: {
     currentUser(state) {
@@ -19,7 +20,10 @@ export default ({
     },
     allRealEstateType(state) {
       return state.allRealEstateType;
-    }
+    },
+    allRealEstate(state) {
+      return state.allRealEstates;
+    },
   },
   mutations: {
     signout(state) {
@@ -30,6 +34,9 @@ export default ({
     },
     setAllRealEstateType(state, allRealEstateType) {
       state.allRealEstateType = allRealEstateType;
+    },
+    setAllRealEstate(state, allRealEstates) {
+      state.allRealEstates = allRealEstates;
     },
   },
   actions: {
@@ -47,6 +54,19 @@ export default ({
       const response = await RealEstateTypeService.getAllRealEstateTypes();
       commit("setAllRealEstateType", response.data);
     },
+    async getAllRealEstate({ commit }) {
+      const response = await RealEstateService.getAllRealEstate();
+      const mappedRealEstates = response.map((estate) => {
+        return {
+          ...estate,
+          bat_dong_san: {
+            ...estate.bat_dong_san,
+            HinhAnh: JSON.parse(estate.bat_dong_san.HinhAnh || ""),
+          },
+        };
+      });
+      commit("setAllRealEstate", mappedRealEstates);
+    },
   },
   modules: {},
-});
+};

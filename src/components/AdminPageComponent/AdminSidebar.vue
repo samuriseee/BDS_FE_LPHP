@@ -62,7 +62,7 @@ export default {
           index: '/admin/user-management',
         },
         {
-          title: 'Quản lý tài khoản',
+          title: 'Quản lý nhân viên',
           icon: 'el-icon-s-custom',
           path: '/admin/account-management',
           index: '/admin/account-management',

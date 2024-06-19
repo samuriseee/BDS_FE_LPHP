@@ -210,6 +210,7 @@
             layout="total, prev, pager, next, jumper"
             :total="realEstatesByParams.length"
             background
+
           >
           </el-pagination>
         </a-layout-content>
@@ -526,6 +527,11 @@ export default {
 <style scoped>
 .el-select .el-input {
   width: 110px;
+}
+
+.el-pagination.is-background .el-pager li.active {
+  background-color: #e03c31 !important;
+  color: #FFF;
 }
 
 .input-with-select .el-input-group__prepend {

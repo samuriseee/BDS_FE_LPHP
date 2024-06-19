@@ -1,9 +1,7 @@
 // profile
-import profilePage from "../pages/profile/ProfilePage.vue";
-import profilePostsPage from "../pages/profile/ProfilePostsPage.vue";
-
 import userPostManagement from "../pages/userPostManagement/index.vue";
 import CreateNewRealEstates from "../pages/userPostManagement/CreateNewPost.vue";
+import EditEstatePost from "@/pages/userPostManagement/EditEstatePost.vue";
 import UserPostManagement from "@/pages/userPostManagement/UserPostManagement.vue";
 import homePage from "../pages/Home.vue";
 import newsPage from "../pages/news/NewsPage.vue";
@@ -19,6 +17,7 @@ import AccountManagement from "@/pages/AdminView/AccountManagement.vue";
 import admin from "@/pages/AdminView/index.vue";
 import AdminRealEstateDetail from "@/pages/AdminView/RealEstatePostManagementDetail.vue";
 import ForgotPasswordView from "@/pages/AuthenView/ForgotPasswordView.vue";
+import ProfilePage from "@/pages/userPostManagement/ProfilePage.vue";
 
 import { routePropResolver } from "./util";
 import { DOMAIN_TITLE } from "../.env";
@@ -52,6 +51,16 @@ export const routes = [
         path: "list",
         name: "userPostManagement",
         component: UserPostManagement,
+      },
+      {
+        path: "edit/:id",
+        name: "editPost",
+        component: EditEstatePost,
+      },
+      {
+        path: "profile",
+        name: "profilePage",
+        component: ProfilePage,
       }
     ],
   },
@@ -70,18 +79,6 @@ export const routes = [
     component: realEstateDetail,
     name: "realEstateDetail",
     meta: { title: `${DOMAIN_TITLE} | real estate detail` },
-  },
-  {
-    path: "/profile",
-    component: profilePage,
-    meta: { isAuth: true, title: `${DOMAIN_TITLE} | profile` },
-    children: [
-      {
-        path: "",
-        name: "profile",
-        component: profilePostsPage,
-      },
-    ],
   },
   {
     path: "/admin",

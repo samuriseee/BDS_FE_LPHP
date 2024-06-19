@@ -24,7 +24,7 @@ export class RealEstateService extends BaseService {
   static async getAllRealEstates() {
     try {
       const response = await this.request().get(
-        `${this.entity}/all_joined/`
+        `${this.entity}/all_joined/?offset=0&limit=9999999999`
       );
       return response.data;
     } catch (error) {

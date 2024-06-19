@@ -27,3 +27,10 @@ export const RealEstatePostStatusTagStyle = {
         style: 'color: purple;'
     },
 }
+
+export const RealEstatePostStatuses = [
+    { value: 0, text: 'Chưa duyệt' },
+    { value: 1, text: 'Đã duyệt' },
+    { value: 2, text: 'Không duyệt' },
+    { value: 3, text: 'Vi phạm' },
+]

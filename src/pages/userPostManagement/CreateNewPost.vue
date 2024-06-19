@@ -81,7 +81,7 @@
             <label for="title">Mô tả</label>
             <el-input
               label="Mô tả"
-              :autosize="{ minRows: 5, maxRows: 10}"
+              :autosize="{ minRows: 5, maxRows: 10 }"
               required
               type="textarea"
               placeholder="Nhập mô tả bài viết"
@@ -115,8 +115,7 @@
             </div>
           </div>
           <div class="price">
-            <div class="form-group"
-            >
+            <div class="form-group">
               <label for="title">Giá</label>
               <a-input-number
                 required
@@ -131,8 +130,7 @@
                 v-model="newEstatePost.MucGia"
                 placeholder="Nhập giá bất động sản"
               />
-              <p v-if="this.newEstatePost.MucGia"
-              >
+              <p v-if="this.newEstatePost.MucGia">
                 Tổng giá trị
                 <span :style="{ fontWeight: 'bold' }">{{
                   formattedPrice
@@ -514,7 +512,7 @@ export default {
         ).id;
         return typeID;
       }
-      return '';
+      return "";
     },
     formattedPrice() {
       return formatCurrencyToVietnamese(this.newEstatePost.MucGia);
@@ -533,7 +531,7 @@ export default {
       this.newEstatePost.LoaiBDS = null;
     },
     async CreatePost() {
-      // this.loading = true;
+      this.loading = true;
       const newPost = {
         ...this.newEstatePost,
         LoaiBDS: this.convertTypeOfRealEstateToID,
@@ -546,8 +544,10 @@ export default {
         TrangThai: RealEstatePostStatus.CHUA_DUYET,
         DienTich: Number(this.newEstatePost.DienTich),
         // eslint-disable-next-line quote-props
-        JsonData: { "key": "value" },
+        JsonData: { key: "value" },
         id_dia_chi_cu_the: 4,
+        Lat: `${(Math.random() * 360 - 180).toString()}`,
+        Long: `${(Math.random() * 360 - 180).toString()}`,
       };
       RealEstateService.createNewRealEstatePost(newPost)
         .then((res) => {
@@ -555,7 +555,7 @@ export default {
             this.$notification.success({
               message: "Tạo tin mới thành công",
             });
-            this.$router.push("/userPostManagement/list")
+            this.$router.push("/userPostManagement/list");
           } else {
             this.$notification.error({
               message: "Đăng tin thất bại",

@@ -82,6 +82,40 @@ export default {
       selectedWard: "",
     };
   },
+  props: {
+    ThanhPho: {
+      type: String,
+      default: "",
+    },
+    Quan: {
+      type: String,
+      default: "",
+    },
+    Phuong: {
+      type: String,
+      default: "",
+    },
+  },
+  watch: {
+    ThanhPho: {
+      handler(newValue) {
+        this.selectedCity = newValue;
+      },
+      immediate: true,
+    },
+    Quan: {
+      handler(newValue) {
+        this.selectedDistrict = newValue;
+      },
+      immediate: true,
+    },
+    Phuong: {
+      handler(newValue) {
+        this.selectedWard = newValue;
+      },
+      immediate: true,
+    },
+  },
   mounted() {
     this.getAPI();
   },
