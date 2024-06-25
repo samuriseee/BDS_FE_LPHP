@@ -32,7 +32,7 @@
               <el-option
                 v-for="type in AllRealEstateType"
                 :key="type.ID"
-                :value="type.LoaiBDS"
+                :value="type.id"
                 :label="type.LoaiBDS"
               >
               </el-option>
@@ -374,7 +374,7 @@
         </div>
         <div class="sticky">
           <button class="btn btn-primary">Xem trước giao diện</button>
-          <button class="btn btn-primary" @click="CreatePost">Đăng tin</button>
+          <button class="btn btn-primary" @click="UpdatePost()">Cập nhật tin đăng</button>
         </div>
       </div>
     </a-spin>
@@ -508,16 +508,6 @@ export default {
   },
   computed: {
     ...mapGetters(["allRentTypes", "allBuyTypes", "currentUser"]),
-    DangThongTin() {
-      const selectedType = this.newEstatePost.LoaiBDS;
-      if (selectedType) {
-        const typeOfInfo = this.AllRealEstateType.find(
-          (type) => type.LoaiBDS === selectedType || type.id === selectedType
-        );
-        return typeOfInfo.DangThongTin;
-      }
-      return null;
-    },
     fieldsToRender() {
       if (!this.newEstatePost.LoaiBDS) return [];
       const typeOfInfo = this.DangThongTin;
@@ -531,15 +521,16 @@ export default {
         return this.allRentTypes;
       }
     },
-    convertTypeOfRealEstateToID() {
-      const type = this.newEstatePost.LoaiBDS;
-      if (type) {
-        const typeID = this.AllRealEstateType.find(
-          (item) => item.LoaiBDS === type
-        ).id;
-        return typeID;
+    DangThongTin() {
+      const selectedType = this.newEstatePost.LoaiBDS;
+      if (selectedType) {
+        const allTypes = this.AllRealEstateType ?? this.allBuyTypes.concat(this.allRentTypes);
+        const typeOfInfo = allTypes?.find(
+          (type) => type.id === selectedType
+        );
+        return typeOfInfo.DangThongTin;
       }
-      return "";
+      return '';
     },
     formattedPrice() {
       return formatCurrencyToVietnamese(this.newEstatePost.MucGia);
@@ -568,19 +559,19 @@ export default {
         },
       };
       this.newEstatePost = mappedEstate.bat_dong_san;
-      console.log(this.newEstatePost);
       this.loading = false;
+      console.log(this.newEstatePost);
     },
-    async CreatePost() {
+    async UpdatePost() {
       this.loading = true;
       const newPost = {
         ...this.newEstatePost,
-        LoaiBDS: this.convertTypeOfRealEstateToID,
+        LoaiBDS: this.newEstatePost.LoaiBDS,
         IDNguoiDung: this.currentUser.id,
         HinhAnh: JSON.stringify(this.imageUrls),
-        ThanhPho: this.location.city,
-        Quan: this.location.district,
-        Phuong: this.location.ward,
+        ThanhPho: this.location?.city || this.newEstatePost.ThanhPho,
+        Quan: this.location?.district || this.newEstatePost.Quan,
+        Phuong: this.location?.ward || this.newEstatePost.Phuong,
         Duong: this.newEstatePost.DiaChi,
         TrangThai: RealEstatePostStatus.CHUA_DUYET,
         DienTich: Number(this.newEstatePost.DienTich),
@@ -590,7 +581,7 @@ export default {
         Lat: `${(Math.random() * 360 - 180).toString()}`,
         Long: `${(Math.random() * 360 - 180).toString()}`,
       };
-      RealEstateService.createNewRealEstatePost(newPost)
+      RealEstateService.updateRealEstatePost(this.routerId, newPost)
         .then((res) => {
           if (res.status === 200) {
             this.$notification.success({

@@ -59,7 +59,7 @@
 <script>
 import { validationMixin } from "vuelidate";
 import { required, email, minLength } from "vuelidate/lib/validators";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import CommonLayout from "@/layout/CommonLayout.vue";
 import { AuthService } from "@/services/auth2.service";
 
@@ -82,6 +82,12 @@ export default {
     loginUser: {
       email: { required, email },
       password: { required, minLength: minLength(6) },
+    },
+  },
+  computed: {
+    ...mapGetters(["currentUser"]),
+    is_admin() {
+      return this.currentUser?.is_admin;
     },
   },
   methods: {
@@ -107,7 +113,11 @@ export default {
             this.$notification.success({
               message: "Đăng nhập thành công",
             });
-            this.$router.push("/");
+            if (this.is_admin) {
+              this.$router.push("/admin/dashboard");
+            } else {
+              this.$router.push("/");
+            }
           }
         })
         .catch((err) => {

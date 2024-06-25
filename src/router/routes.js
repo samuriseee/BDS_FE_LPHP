@@ -4,7 +4,6 @@ import CreateNewRealEstates from "../pages/userPostManagement/CreateNewPost.vue"
 import EditEstatePost from "@/pages/userPostManagement/EditEstatePost.vue";
 import UserPostManagement from "@/pages/userPostManagement/UserPostManagement.vue";
 import homePage from "../pages/Home.vue";
-import newsPage from "../pages/news/NewsPage.vue";
 import loginPage from "../pages/AuthenView/LoginView.vue";
 import notFoundPage from "../pages/NotFound.vue";
 import registerPage from "../pages/AuthenView/RegisterView.vue";
@@ -19,7 +18,6 @@ import AdminRealEstateDetail from "@/pages/AdminView/RealEstatePostManagementDet
 import ForgotPasswordView from "@/pages/AuthenView/ForgotPasswordView.vue";
 import ProfilePage from "@/pages/userPostManagement/ProfilePage.vue";
 
-import { routePropResolver } from "./util";
 import { DOMAIN_TITLE } from "../.env";
 
 
@@ -29,13 +27,6 @@ export const routes = [
     name: "index",
     component: homePage,
     meta: { title: `${DOMAIN_TITLE} | home` },
-  },
-  {
-    path: "/news",
-    name: "news",
-    component: newsPage,
-    meta: { title: `${DOMAIN_TITLE} | news` },
-    props: routePropResolver,
   },
   {
     path: "/userPostManagement",

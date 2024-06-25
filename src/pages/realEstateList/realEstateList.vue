@@ -210,7 +210,6 @@
             layout="total, prev, pager, next, jumper"
             :total="realEstatesByParams.length"
             background
-
           >
           </el-pagination>
         </a-layout-content>
@@ -294,7 +293,6 @@ export default {
       cities: [],
       districts: [],
       allRealEstates: [],
-      searchQuery: "",
       filterCateByPrice: [
         { value: [], label: "Tất cả" },
         {
@@ -395,24 +393,37 @@ export default {
           (this.realEstateType == null ||
             this.realEstateType == undefined ||
             estate.loai_bat_dong_san.id == this.realEstateType);
+
         const isPriceMatch =
           price.length === 0 ||
           (estate.bat_dong_san.MucGia >= price[0] &&
             estate.bat_dong_san.MucGia <= price[1]);
+
         const isAreaMatch =
           area.length === 0 ||
           (estate.bat_dong_san.DienTich >= area[0] &&
             estate.bat_dong_san.DienTich <= area[1]);
+
         const isCityMatch =
           city === "" ||
           estate.bat_dong_san.ThanhPho == this.onlyGetNameOfCity(city);
+
         const isDistrictMatch =
           district.length === 0 || district === estate.bat_dong_san.Quan;
+
         const isLoaiBDSMatch =
           LoaiBDS.length === 0 || LoaiBDS.includes(estate.loai_bat_dong_san.id);
+
         const isBedroomsMatch =
           bedrooms.length === 0 ||
           bedrooms.includes(estate.bat_dong_san.SoPhongNgu);
+
+        const isIncludesKeyword =
+          this.selectedCategoriesParams.keyword === "" ||
+          estate.bat_dong_san.TieuDe.toLowerCase().includes(
+            this.selectedCategoriesParams.keyword.toLowerCase()
+          );  
+        console.log('keyword', this.selectedCategoriesParams)  
         return (
           isMatchBusinessTypeAndBeenApproved &&
           isPriceMatch &&
@@ -420,7 +431,8 @@ export default {
           isCityMatch &&
           isDistrictMatch &&
           isLoaiBDSMatch &&
-          isBedroomsMatch
+          isBedroomsMatch && 
+          isIncludesKeyword
         );
       });
     },
@@ -441,7 +453,7 @@ export default {
       const selectedCity = this.cities.find((c) => c.name === city);
       this.districts = selectedCity.districts;
     },
-    querySearch(queryString, cb) {
+    querySearch(queryString, callback) {
       if (this.selectedCategoriesParams.city) {
         const results = queryString
           ? this.districts.filter((district) =>
@@ -454,9 +466,9 @@ export default {
             label: district.name,
           };
         });
-        cb(mappedResult);
+        callback(mappedResult);
       } else {
-        cb(this.cities.map((city) => ({ value: city.name, label: city.name })));
+        callback(this.cities.map((city) => ({ value: city.name, label: city.name })));
       }
     },
     handleSelect(item) {
@@ -464,9 +476,6 @@ export default {
     },
     goToEstateDetails(id) {
       this.$router.push({ name: "estate", params: { id: id } });
-    },
-    updateSearchQuery(searchQuery) {
-      this.searchQuery = searchQuery;
     },
     async getRealEstates() {
       try {

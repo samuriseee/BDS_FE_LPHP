@@ -1,6 +1,7 @@
 <template>
   <HomeLayout>
     <div class="home">
+      <NotFound />
       <div class="hero-section">
         <el-carousel trigger="click" class="full-width-carousel" height="600px">
           <el-carousel-item v-for="url in imgUrls" :key="url">
@@ -342,11 +343,13 @@ import { mapGetters } from "vuex";
 import { RealEstateService } from "@/services/real_estate.service";
 import { RealEstatePostStatus } from "@/constants/index";
 import { formatCurrencyToVietnamese } from "@/services/util";
+import NotFound from './NotFound.vue';
 
 export default {
   name: "Home",
   components: {
     HomeLayout,
+    NotFound
   },
   data() {
     return {

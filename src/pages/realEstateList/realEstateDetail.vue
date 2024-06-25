@@ -171,7 +171,6 @@
                   <div>
                     <img src="@/assets/Icon/functional/toilet.png" />
                     <b>Số phòng tắm</b>
-
                   </div>
                   <p>{{ estateDetail.bat_dong_san.SoPhongTam }}</p>
                 </div>

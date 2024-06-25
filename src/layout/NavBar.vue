@@ -85,15 +85,15 @@
             </div>
             <template #overlay>
               <a-menu>
-                <a-menu-item :style="menuItemStyle" @click="toPostManagement()">
+                <a-menu-item v-if="!isAdmin" :style="menuItemStyle" @click="toPostManagement()">
                   <a-icon :style="iconStyle" type="unordered-list" />
                   <a>Quản lý tin đăng</a>
                 </a-menu-item>
-                <a-menu-item :style="menuItemStyle" @click="toProfile()">
+                <a-menu-item v-if="!isAdmin" :style="menuItemStyle" @click="toProfile()">
                   <a-icon :style="iconStyle" type="user" />
                   <a>Thay đổi thông tin cá nhân</a>
                 </a-menu-item>
-                <a-menu-item :style="menuItemStyle">
+                <a-menu-item v-if="!isAdmin" :style="menuItemStyle">
                   <a-icon :style="iconStyle" type="unlock" />
                   <a>Thay đổi mật khẩu</a>
                 </a-menu-item>
