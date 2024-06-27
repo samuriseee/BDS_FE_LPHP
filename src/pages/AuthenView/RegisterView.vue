@@ -134,6 +134,7 @@ export default {
         cccd: ("123456789" + Math.floor(Math.random() * 1000)).toString(),
         trang_thai: 1,
         is_admin: 0,
+        is_employee: 0,
       }).then((res) => {
         this.$notification.success({
           message: "Đăng ký tài khoản thành công",
