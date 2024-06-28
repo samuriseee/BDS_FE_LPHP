@@ -1,6 +1,7 @@
 import { assert } from "@/core";
 import { BaseService } from "./base.service";
-import { ErrorWrapper } from "./util";
+import { ErrorWrapper, formatParams } from "./util";
+// import { stringify } from "qs";
 
 export class RealEstateService extends BaseService {
   static get entity() {
@@ -21,14 +22,14 @@ export class RealEstateService extends BaseService {
     }
   }
 
-  static async getAllRealEstates() {
+  static async getAllRealEstates(params) {
     try {
       const response = await this.request().get(
-        `${this.entity}/all_joined/?offset=0&limit=9999999999`
+        `${this.entity}/search_joined/?${formatParams(params)}`
       );
       return response.data;
     } catch (error) {
-      console.log('error', error)
+      console.log("error", error);
       const message = error.response.data
         ? error.response.data.error
         : error.response.statusText;
@@ -61,6 +62,22 @@ export class RealEstateService extends BaseService {
       const response = await this.request({ auth: true }).put(
         `${this.entity}/${id}`,
         data
+      );
+      return response;
+    } catch (error) {
+      const message = error.response.data
+        ? error.response.data.error
+        : error.response.statusText;
+      throw new ErrorWrapper(error, message);
+    }
+  }
+
+  static async deleteRealEstatePost(id) {
+    assert.id(id, { required: true });
+
+    try {
+      const response = await this.request({ auth: true }).delete(
+        `${this.entity}/${id}`
       );
       return response;
     } catch (error) {

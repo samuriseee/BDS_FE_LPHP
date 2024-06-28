@@ -14,23 +14,27 @@
     >
       Quản lý tin đăng
     </h1>
-    <div :style="{
-      margin: '15px 0',
-      display: 'flex',
-      justifyContent: 'flex-start',
-    }">
+    <div
+      :style="{
+        margin: '15px 0',
+        display: 'flex',
+        justifyContent: 'flex-start',
+      }"
+    >
       <el-input
         prefix-icon="el-icon-search"
-        v-model="searchParams.search"
+        v-model="searchParams.TieuDe"
+        clearable
         placeholder="Tìm kiếm"
         :style="{
           width: '500px',
         }"
       ></el-input>
       <el-select
-        v-model="searchParams.status"
+        v-model="searchParams.TrangThai"
         placeholder="Trạng thái"
         style="margin-left: 10px"
+        clearable 
       >
         <el-option
           v-for="item in RealEstatePostStatuses"
@@ -42,9 +46,18 @@
     </div>
     <a-table
       :columns="allColumns"
-      :data-source="filteredRealEstates"
+      :data-source="allRealEstates"
       row-key="id"
-      :loading="listLoading"
+      :loading="loading"
+      :pagination="{
+        current: currentPage,
+        pageSize: itemsPerPage,
+        total: totalRecords,
+        showSizeChanger: true,
+        pageSizeOptions: ['5', '10', '20', '50'],
+        showTotal: (total) => `Tổng số ${total} bài đăng`,
+      }"
+       @change="handleTableChange"
     >
       <span slot="DienTich" slot-scope="DienTich">
         <span>{{ Number(DienTich).toLocaleString("en-US") }} m2</span>
@@ -81,13 +94,16 @@ export default {
   name: "RealEstatePostManagement",
   data() {
     return {
+      currentPage: 1,
+      itemsPerPage: 5,
+      totalRecords: 0,
       allRealEstates: [],
-      listLoading: true,
+      loading: false,
       RealEstatePostStatuses,
       RealEstatePostStatusTagStyle,
       searchParams: {
-        search: "",
-        status: null,
+        TieuDe: "",
+        TrangThai: null,
       },
       allColumns: [
         {
@@ -137,37 +153,48 @@ export default {
     };
   },
   created() {
-    this.getAllRealEstates();
-  },
-  computed: {
-    filteredRealEstates() {
-      return this.allRealEstates.filter((realEstate) => {
-        return (
-          realEstate.bat_dong_san.TieuDe.toLowerCase().includes(
-            this.searchParams.search.toLowerCase()
-          ) &&
-          (this.searchParams.status !== null
-            ? realEstate.bat_dong_san.TrangThai == this.searchParams.status
-            : true)
-        );
-      });
-    },
+    this.getRealEstates(this.searchParams);
   },
   methods: {
     formatCurrencyToVietnamese,
-    getAllRealEstates() {
-      RealEstateService.getAllRealEstates()
-        .then((response) => {
-          this.allRealEstates = response;
-          console.log("allRealEstates", this.allRealEstates);
-          this.listLoading = false;
-        })
-        .catch((error) => {
-          console.log(error);
+    handleSizeChange(val) {
+      this.itemsPerPage = val;
+    },
+    async handleCurrentChange(val) {
+      this.currentPage = val;
+    },
+    handleTableChange(pagination, filters, sorter) {
+      this.currentPage = pagination.current;
+      this.itemsPerPage = pagination.pageSize;
+      this.getRealEstates(this.searchParams);
+    },
+    async getRealEstates(params) {
+      try {
+        this.loading = true;
+        const offset = (this.currentPage - 1) * this.itemsPerPage;
+        const limit = this.itemsPerPage;
+        const response = await RealEstateService.getAllRealEstates({
+          ...params,
+          offset,
+          limit,
         });
+        this.allRealEstates = response.data;
+        this.totalRecords = response.total_records;
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+      }
     },
     handleViewDetail(record) {
       this.$router.push(`/admin/post-management/${record.bat_dong_san.id}`);
+    },
+  },
+  watch: {
+    searchParams: {
+      handler() {
+        this.getRealEstates(this.searchParams);
+      },
+      deep: true,
     },
   },
 };

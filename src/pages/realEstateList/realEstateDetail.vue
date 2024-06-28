@@ -10,38 +10,11 @@
       <a-layout
         :style="{
           background: 'transparent',
-          padding: '30px 20px'
+          padding: '30px 20px',
         }"
       >
         <a-layout-content>
-          <a-carousel
-            class="imageBox"
-            arrows
-            dots-class="slick-dots slick-thumb"
-          >
-            <div
-              slot="prevArrow"
-              class="custom-slick-arrow"
-              style="left: 10px; zindex: 1"
-            >
-              <a-icon type="left-circle" />
-            </div>
-            <div
-              slot="nextArrow"
-              class="custom-slick-arrow"
-              style="right: 10px"
-            >
-              <a-icon type="right-circle" />
-            </div>
-            <a slot="customPaging" slot-scope="props">
-              <img :src="getImgUrl(props.i)" />
-            </a>
-            <div v-for="url in estateDetail.bat_dong_san.HinhAnh" :key="url">
-              <div>
-                <img :src="url" style="cursor: pointer" />
-              </div>
-            </div>
-          </a-carousel>
+          <SliderLightBox :images="estateDetail.bat_dong_san.HinhAnh" />
           <div class="detail__left--content">
             <div class="detail__left--title">
               <p class="breadcrumb">
@@ -66,10 +39,12 @@
                 <div class="left__specifications--item">
                   <p>Mức giá</p>
                   <h4>
-                    {{ estateDetail.bat_dong_san.MucGia ?
-                      formatCurrencyToVietnamese(
-                        estateDetail.bat_dong_san.MucGia
-                      ) : 'Thoả thuận'
+                    {{
+                      estateDetail.bat_dong_san.MucGia
+                        ? formatCurrencyToVietnamese(
+                            estateDetail.bat_dong_san.MucGia
+                          )
+                        : "Thoả thuận"
                     }}
                     {{ estateDetail.bat_dong_san.DonVi }}
                   </h4>
@@ -143,7 +118,11 @@
                     <b>Mức giá</b>
                   </div>
                   <p>
-                    {{ formatCurrencyToVietnamese(estateDetail.bat_dong_san.MucGia) }}
+                    {{
+                      formatCurrencyToVietnamese(
+                        estateDetail.bat_dong_san.MucGia
+                      )
+                    }}
                     {{ estateDetail.bat_dong_san.DonVi }}
                   </p>
                 </div>
@@ -181,7 +160,6 @@
                   <div>
                     <img src="@/assets/Icon/functional/noi_that.png" />
                     <b>Số tầng</b>
-
                   </div>
                   <p>{{ estateDetail.bat_dong_san.SoTang }}</p>
                 </div>
@@ -192,7 +170,6 @@
                   <div>
                     <img src="@/assets/Icon/functional/noi_that.png" />
                     <b>Nội Thất</b>
-
                   </div>
                   <p>{{ estateDetail.bat_dong_san.NoiThat }}</p>
                 </div>
@@ -201,7 +178,6 @@
                   v-if="estateDetail.bat_dong_san.HuongBanCong"
                 >
                   <div>
-
                     <img src="@/assets/Icon/functional/ban_cong.png" />
                     <b>Hướng ban công</b>
                   </div>
@@ -214,7 +190,6 @@
                   <div>
                     <img src="@/assets/Icon/functional/huong_nha.png" />
                     <b>Hướng Nhà</b>
-
                   </div>
                   <p>{{ estateDetail.bat_dong_san.HuongNha }}</p>
                 </div>
@@ -225,7 +200,6 @@
                   <div>
                     <img src="@/assets/Icon/functional/dien_tich.png" />
                     <b>Đường vào</b>
-
                   </div>
                   <p>{{ estateDetail.bat_dong_san.DuongVao }} m²</p>
                 </div>
@@ -236,7 +210,6 @@
                   <div>
                     <img src="@/assets/Icon/functional/dien_tich.png" />
                     <b>Mặt tiền</b>
-
                   </div>
                   <p>{{ estateDetail.bat_dong_san.MatTien }} m²</p>
                 </div>
@@ -244,16 +217,20 @@
             </div>
 
             <div class="detail__left--chartjs">
-              <h1 :style="{
-                fontSize: '24px',
-                lineHeight: '32px',
-                fontWeight: '500',
-                letterSpacing: '-0.2px',
-                color: '#2C2C2C',
-                display: 'block',
-                textAlign: 'left',
-                marginBottom: '10px',
-              }">Biểu đồ so sánh giá các bất động sản cùng loại trong khu vực</h1>
+              <h1
+                :style="{
+                  fontSize: '24px',
+                  lineHeight: '32px',
+                  fontWeight: '500',
+                  letterSpacing: '-0.2px',
+                  color: '#2C2C2C',
+                  display: 'block',
+                  textAlign: 'left',
+                  marginBottom: '10px',
+                }"
+              >
+                Biểu đồ so sánh giá các bất động sản cùng loại trong khu vực
+              </h1>
               <LineChartGenerator
                 :chart-options="chartOptions"
                 :chart-data="chartData"
@@ -268,16 +245,20 @@
             </div>
 
             <div class="detail__left--chartjs">
-              <h1 :style="{
-                fontSize: '24px',
-                lineHeight: '32px',
-                fontWeight: '500',
-                letterSpacing: '-0.2px',
-                color: '#2C2C2C',
-                display: 'block',
-                textAlign: 'left',
-                marginBottom: '10px',
-              }">Biểu đồ dự đoán giá tương lai</h1>
+              <h1
+                :style="{
+                  fontSize: '24px',
+                  lineHeight: '32px',
+                  fontWeight: '500',
+                  letterSpacing: '-0.2px',
+                  color: '#2C2C2C',
+                  display: 'block',
+                  textAlign: 'left',
+                  marginBottom: '10px',
+                }"
+              >
+                Biểu đồ dự đoán giá tương lai
+              </h1>
               <LineChartGenerator
                 :chart-options="chartOptions"
                 :chart-data="chartData2"
@@ -305,15 +286,16 @@
             }"
             class="re_card-author"
           >
-            <div :style="{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: '10px',
-            }">
+            <div
+              :style="{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '10px',
+              }"
+            >
               <a-avatar
-
                 :size="60"
                 :style="{
                   backgroundColor: '#ffeceb',
@@ -323,20 +305,28 @@
               >
                 {{ estateDetail.nguoi_dung.ho_ten.slice(0, 1) }}
               </a-avatar>
-              <h3 :style="{
-                fontSize: '18px',
-              }"> {{ estateDetail.nguoi_dung.ho_ten }} </h3>
+              <h3
+                :style="{
+                  fontSize: '18px',
+                }"
+              >
+                {{ estateDetail.nguoi_dung.ho_ten }}
+              </h3>
             </div>
             <div class="button-section">
-              <el-button :style="{
-                background: '#009ba1',
-                color: 'white',
-              }"> <font-awesome-icon icon="phone" /> {{ estateDetail.nguoi_dung.so_dien_thoai }} </el-button>
+              <el-button
+                :style="{
+                  background: '#009ba1',
+                  color: 'white',
+                }"
+              >
+                <font-awesome-icon icon="phone" />
+                {{ estateDetail.nguoi_dung.so_dien_thoai }}
+              </el-button>
               <el-button> Nhắn tin qua zalo </el-button>
               <el-button> Gửi Email </el-button>
               <el-button> Yêu cầu liên hệ lại </el-button>
             </div>
-
           </a-card>
         </a-layout-sider>
       </a-layout>
@@ -345,7 +335,8 @@
 </template>
 
 <script>
-import { Line as LineChartGenerator } from 'vue-chartjs/legacy'
+import SliderLightBox from "@/components/SliderLightBox.vue";
+import { Line as LineChartGenerator } from "vue-chartjs/legacy";
 import CommonLayout from "@/layout/CommonLayout.vue";
 import { RealEstateService } from "@/services/real_estate.service";
 import { formatCurrencyToVietnamese } from "@/services/util";
@@ -357,8 +348,8 @@ import {
   LineElement,
   LinearScale,
   CategoryScale,
-  PointElement
-} from 'chart.js'
+  PointElement,
+} from "chart.js";
 
 ChartJS.register(
   Title,
@@ -368,90 +359,83 @@ ChartJS.register(
   LinearScale,
   CategoryScale,
   PointElement
-)
+);
 
 export default {
   name: "RealEstateDetail",
   components: {
     CommonLayout,
-    LineChartGenerator                                                                                                                               
+    LineChartGenerator,
+    SliderLightBox,
+    // Swiper,
+    // SwiperSlide,
   },
   data() {
     return {
       estateDetail: {},
       id: this.$route.params.id,
       selectedImagePreview: "",
-      chartId: 'line-chart',
-      datasetIdKey: 'label',
-      cssClasses: '',
+      chartId: "line-chart",
+      datasetIdKey: "label",
+      cssClasses: "",
       styles: {},
       plugins: [],
-      height: '400',
-      width: '400',
+      height: "400",
+      width: "400",
       chartData: {
-        labels: [
-          'Q3/23',
-          'Q4/23',
-          'Q1/24',
-          'Q2/24'
-        ],
+        labels: ["Q3/23", "Q4/23", "Q1/24", "Q2/24"],
         datasets: [
           {
-            label: 'Giá cao nhất',
-            backgroundColor: '#C2C2C2',
-            data: [40, 41, 42, 43]
+            label: "Giá cao nhất",
+            backgroundColor: "#C2C2C2",
+            data: [40, 41, 42, 43],
           },
           {
-            label: 'Giá phổ biến nhất',
-            backgroundColor: '#f87979',
-            data: [30, 31, 32, 34]
+            label: "Giá phổ biến nhất",
+            backgroundColor: "#f87979",
+            data: [30, 31, 32, 34],
           },
           {
-            label: 'Giá thấp nhất',
-            backgroundColor: '#009BA1',
-            data: [25, 25, 25, 26]
+            label: "Giá thấp nhất",
+            backgroundColor: "#009BA1",
+            data: [25, 25, 25, 26],
           },
           {
-            label: 'Giá tin đang xem',
-            backgroundColor: 'red',
-            data: [34]
-          }
-        ]
+            label: "Giá tin đang xem",
+            backgroundColor: "red",
+            data: [34],
+          },
+        ],
       },
       chartData2: {
-        labels: [
-          'Q1/24',
-          'Q2/24',
-          'Q3/24',
-          'Q4/24'
-        ],
+        labels: ["Q1/24", "Q2/24", "Q3/24", "Q4/24"],
         datasets: [
           {
-            label: 'Giá cao nhất',
-            backgroundColor: '#C2C2C2',
-            data: [41, 45, 50, 48]
+            label: "Giá cao nhất",
+            backgroundColor: "#C2C2C2",
+            data: [41, 45, 50, 48],
           },
           {
-            label: 'Giá phổ biến nhất',
-            backgroundColor: '#f87979',
-            data: [40, 39, 32, 40]
+            label: "Giá phổ biến nhất",
+            backgroundColor: "#f87979",
+            data: [40, 39, 32, 40],
           },
           {
-            label: 'Giá thấp nhất',
-            backgroundColor: '#009BA1',
-            data: [30, 35, 38, 39]
+            label: "Giá thấp nhất",
+            backgroundColor: "#009BA1",
+            data: [30, 35, 38, 39],
           },
           {
-            label: 'Giá tin đang xem',
-            backgroundColor: 'red',
-            data: [34]
-          }
-        ]
+            label: "Giá tin đang xem",
+            backgroundColor: "red",
+            data: [34],
+          },
+        ],
       },
       chartOptions: {
         responsive: true,
-        maintainAspectRatio: false
-      }
+        maintainAspectRatio: false,
+      },
     };
   },
   computed: {
@@ -489,84 +473,7 @@ export default {
 </script>
 
 <style scoped>
-.imageBox {
-  margin: 0 auto;
-  position: relative;
-  width: 100%;
-  max-width: 700px;
-  height: auto;
-  z-index: 1;
-  display: flex;
-  transition-property: transform;
-  box-sizing: content-box;
-  background: #f2f2f2;
-}
-
-.ant-carousel >>> .slick-dots {
-  height: auto;
-}
-
-.ant-carousel >>> .slick-slider {
-  display: flex;
-  align-items: center;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0) 59%,
-    rgba(0, 0, 0, 0.65) 100%
-  );
-}
-
-.ant-carousel >>> .slick-slide img {
-  display: block;
-  margin: auto;
-  height: 500px;
-  max-width: 100%;
-  object-fit: cover;
-}
-
-.ant-carousel >>> .slick-thumb {
-  bottom: -20%;
-}
-
-.ant-carousel >>> .slick-thumb li {
-  width: 107px;
-  height: 80px;
-}
-
-.ant-carousel >>> .slick-thumb li img {
-  width: 100%;
-  height: 100%;
-  filter: grayscale(100%);
-}
-
-.ant-carousel >>> .slick-thumb li.slick-active img {
-  filter: grayscale(0%);
-}
-
-.ant-carousel >>> .custom-slick-arrow {
-  width: 25px;
-  height: 25px;
-  font-size: 25px;
-  color: #fff;
-  background-color: rgba(0, 0, 0, 0.11);
-  opacity: 0.3;
-}
-
-.ant-carousel >>> .custom-slick-arrow:before {
-  display: none;
-}
-
-.ant-carousel >>> .custom-slick-arrow:hover {
-  opacity: 0.5;
-}
-
-.ant-carousel >>> .slick-slide h3 {
-  color: #000000;
-}
-
 .detail__left--content {
-  margin-top: 20%;
   text-align: start;
 }
 
@@ -674,33 +581,38 @@ h4 {
   border-radius: 5px;
   cursor: pointer;
 }
+
 .functional_flex {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 25px 50px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px 50px;
 }
+
 .functional-item {
-    min-width: 333px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    border-bottom: 1px solid #f2f2f2;
-    padding: 5px 0;
+  min-width: 333px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid #f2f2f2;
+  padding: 5px 0;
 }
+
 .functional-item img {
-    width: 25px;
-    height: 25px;
-    object-fit: cover;
-    margin-right: 20px;
+  width: 25px;
+  height: 25px;
+  object-fit: cover;
+  margin-right: 20px;
 }
+
 .functional-item p {
   width: fit-content;
   min-width: 100px;
   text-align: right;
   margin: 0;
 }
+
 .re_card-author {
   width: fit-content;
   display: flex;
@@ -709,12 +621,14 @@ h4 {
   align-items: center;
   gap: 10px;
 }
+
 .re_card-author .button-section {
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin: 0;
 }
+
 .re_card-author .button-section button {
   min-width: 200px;
   margin: 0;
@@ -732,6 +646,7 @@ h4 {
   align-items: center;
   justify-content: space-evenly;
 }
+
 .detail__left--chartjs {
   margin: 40px auto;
 }

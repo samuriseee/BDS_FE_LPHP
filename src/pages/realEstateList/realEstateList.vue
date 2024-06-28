@@ -7,7 +7,7 @@
         width: '90%',
         margin: '0 auto',
         background: 'transparent',
-        scrollBehavior: 'smooth'
+        scrollBehavior: 'smooth',
       }"
     >
       <a-layout-header
@@ -26,9 +26,8 @@
           <div>
             <el-autocomplete
               placeholder="Nhập địa điểm bạn đang tìm kiếm..."
-              v-model="selectedCategoriesParams.keyword"
+              v-model="selectedCategoriesParams.TieuDe"
               class="input-with-select"
-              :fetch-suggestions="querySearch"
               autocomplete="on"
               :style="{
                 width: '100%',
@@ -37,7 +36,7 @@
               <el-select
                 slot="prepend"
                 placeholder="Chọn thành phố"
-                v-model="selectedCategoriesParams.city"
+                v-model="selectedCategoriesParams.ThanhPho"
                 @change="onCityChange"
                 :style="{
                   minWidth: '200px',
@@ -76,8 +75,9 @@
               multiple
               filterable
               :style="{
-                minWidth: '200px',
+                minWidth: '300px',
                 overflow: 'hidden',
+                width: 'fit-content'
               }"
               placeholder="Loại Nhà Đất"
               v-model="selectedCategoriesParams.LoaiBDS"
@@ -93,7 +93,7 @@
             </el-select>
             <el-select
               placeholder="Mức Giá"
-              v-model="selectedCategoriesParams.price"
+              v-model="selectedCategoriesParams.MucGia"
             >
               <el-option
                 v-for="item in filterCateByPrice"
@@ -108,7 +108,7 @@
               :style="{
                 width: '150px',
               }"
-              v-model="selectedCategoriesParams.area"
+              v-model="selectedCategoriesParams.DienTich"
             >
               <el-option
                 v-for="item in filterCateByArea"
@@ -124,7 +124,7 @@
               :style="{
                 minWidth: '100px',
               }"
-              v-model="selectedCategoriesParams.bedrooms"
+              v-model="selectedCategoriesParams.SoPhongNgu"
             >
               <el-option
                 v-for="item in 20"
@@ -155,8 +155,8 @@
               this.businessType ? "Bán" : "Cho Thuê"
             }}</el-breadcrumb-item>
             <el-breadcrumb-item>{{
-              this.selectedCategoriesParams.city
-                ? this.selectedCategoriesParams.city
+              this.selectedCategoriesParams.ThanhPho
+                ? this.selectedCategoriesParams.ThanhPho
                 : "Toàn Quốc"
             }}</el-breadcrumb-item>
           </el-breadcrumb>
@@ -174,9 +174,9 @@
             }"
           >
             {{
-              this.selectedCategoriesParams.city
+              this.selectedCategoriesParams.ThanhPho
                 ? `Nhà đất ${this.businessType ? "bán" : "cho thuê"} tại
-            ${this.selectedCategoriesParams.city}`
+            ${this.selectedCategoriesParams.ThanhPho}`
                 : `Nhà đất ${this.businessType ? "bán" : "cho thuê"} toàn quốc`
             }}
           </h1>
@@ -190,11 +190,11 @@
               marginLeft: '20px',
             }"
           >
-            Hiện đang có {{ this.realEstatesByParams.length }} bất động sản
+            Hiện đang có {{ totalRecords }} bất động sản
           </p>
           <a-row>
-            <a-col v-for="estate in paginatedRealEstates" :key="estate.id">
-              <a-spin :spinning="fakeLoading">
+            <a-col v-for="estate in allRealEstates" :key="estate.id">
+              <a-spin :spinning="loading">
                 <EstateCardOnListPage
                   :estate="estate"
                   @goToEstateDetails="goToEstateDetails"
@@ -208,7 +208,7 @@
             :current-page="currentPage"
             :page-size="itemsPerPage"
             layout="total, prev, pager, next, jumper"
-            :total="realEstatesByParams.length"
+            :total="totalRecords"
             background
           >
           </el-pagination>
@@ -232,7 +232,7 @@
                 :style="{
                   cursor: 'pointer',
                 }"
-                @click="selectedCategoriesParams.price = item.value"
+                @click="selectedCategoriesParams.MucGia = item.value"
               >
                 {{ item.label }}
               </a-list-item>
@@ -253,7 +253,7 @@
                 :style="{
                   cursor: 'pointer',
                 }"
-                @click="selectedCategoriesParams.area = item.value"
+                @click="selectedCategoriesParams.DienTich = item.value"
               >
                 {{ item.label }}
               </a-list-item>
@@ -281,15 +281,12 @@ export default {
     SearchBarOnEstateList,
     EstateCardOnListPage,
   },
-  created() {
-    this.getRealEstates();
-    this.getAllCities();
-  },
   data() {
     return {
-      fakeLoading: false,
+      loading: false,
       currentPage: 1,
       itemsPerPage: 5,
+      totalRecords: 0,
       cities: [],
       districts: [],
       allRealEstates: [],
@@ -350,13 +347,13 @@ export default {
         { value: [150, 200], label: "150 - 200 m2" },
       ],
       selectedCategoriesParams: {
-        keyword: "",
-        price: [],
-        area: [],
-        city: "",
-        district: [],
+        TieuDe: "",
+        MucGia: [],
+        DienTich: [],
+        ThanhPho: "",
+        QuanHuyen: [],
         LoaiBDS: [],
-        bedrooms: [],
+        SoPhongNgu: [],
       },
     };
   },
@@ -373,88 +370,69 @@ export default {
           )
         : [];
     },
-    realEstateType() {
-      return this.$route.params.realEstateType;
-    },
-    paginatedRealEstates() {
-      const start = (this.currentPage - 1) * this.itemsPerPage;
-      const end = start + this.itemsPerPage;
-      return this.realEstatesByParams.slice(start, end);
-    },
-    realEstatesByParams() {
-      return this.allRealEstates?.filter((estate) => {
-        const { price, area, city, district, LoaiBDS, bedrooms } =
-          this.selectedCategoriesParams;
-        // eslint-disable-next-line eqeqeq
-        const isMatchBusinessTypeAndBeenApproved =
-          estate.bat_dong_san.TrangThai == RealEstatePostStatus.DA_DUYET &&
-          estate.loai_bat_dong_san.BanHayChoThue ==
-            Boolean(this.businessType) &&
-          (this.realEstateType == null ||
-            this.realEstateType == undefined ||
-            estate.loai_bat_dong_san.id == this.realEstateType);
-
-        const isPriceMatch =
-          price.length === 0 ||
-          (estate.bat_dong_san.MucGia >= price[0] &&
-            estate.bat_dong_san.MucGia <= price[1]);
-
-        const isAreaMatch =
-          area.length === 0 ||
-          (estate.bat_dong_san.DienTich >= area[0] &&
-            estate.bat_dong_san.DienTich <= area[1]);
-
-        const isCityMatch =
-          city === "" ||
-          estate.bat_dong_san.ThanhPho == this.onlyGetNameOfCity(city);
-
-        const isDistrictMatch =
-          district.length === 0 || district === estate.bat_dong_san.Quan;
-
-        const isLoaiBDSMatch =
-          LoaiBDS.length === 0 || LoaiBDS.includes(estate.loai_bat_dong_san.id);
-
-        const isBedroomsMatch =
-          bedrooms.length === 0 ||
-          bedrooms.includes(estate.bat_dong_san.SoPhongNgu);
-
-        const isIncludesKeyword =
-          this.selectedCategoriesParams.keyword === "" ||
-          estate.bat_dong_san.TieuDe.toLowerCase().includes(
-            this.selectedCategoriesParams.keyword.toLowerCase()
-          );  
-        console.log('keyword', this.selectedCategoriesParams)  
-        return (
-          isMatchBusinessTypeAndBeenApproved &&
-          isPriceMatch &&
-          isAreaMatch &&
-          isCityMatch &&
-          isDistrictMatch &&
-          isLoaiBDSMatch &&
-          isBedroomsMatch && 
-          isIncludesKeyword
-        );
-      });
-    },
+  },
+  created() {
+    this.getRealEstates(this.selectedCategoriesParams);
+    this.getAllCities();
   },
   methods: {
     handleSizeChange(val) {
       this.itemsPerPage = val;
     },
     async handleCurrentChange(val) {
-      this.fakeLoading = true;
-      await new Promise(resolve => setTimeout(resolve, 1000));
       this.currentPage = val;
-      this.fakeLoading = false;
       window.scrollTo(0, 150);
     },
-    onCityChange(city) {
-      this.selectedCategoriesParams.city = city;
-      const selectedCity = this.cities.find((c) => c.name === city);
+    onCityChange(ThanhPho) {
+      this.selectedCategoriesParams.ThanhPho = ThanhPho;
+      const selectedCity = this.cities.find((c) => c.name === ThanhPho);
       this.districts = selectedCity.districts;
     },
+    handleSelect(item) {
+      this.selectedCategoriesParams.district = item;
+    },
+    goToEstateDetails(id) {
+      this.$router.push({ name: "estate", params: { id: id } });
+    },
+    routerRealEstateType() {
+      if (this.$route.params.realEstateType) {
+        this.selectedCategoriesParams.LoaiBDS = [
+          Number(this.$route.params.realEstateType),
+        ];
+      }
+    },
+    async getRealEstates(params) {
+      try {
+        this.loading = true;
+        const offset = (this.currentPage - 1) * this.itemsPerPage;
+        const limit = this.itemsPerPage;
+        const response = await RealEstateService.getAllRealEstates({
+          ...params,
+          ThanhPho: params.ThanhPho
+            ? this.onlyGetNameOfCity(params.ThanhPho)
+            : "",
+          TrangThai: RealEstatePostStatus.DA_DUYET,
+          offset,
+          limit,
+        });
+        const mappedRealEstates = response.data.map((estate) => {
+          return {
+            ...estate,
+            bat_dong_san: {
+              ...estate.bat_dong_san,
+              HinhAnh: JSON.parse(estate.bat_dong_san.HinhAnh || ""),
+            },
+          };
+        });
+        this.totalRecords = response.total_records;
+        this.allRealEstates = mappedRealEstates;
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+      }
+    },
     querySearch(queryString, callback) {
-      if (this.selectedCategoriesParams.city) {
+      if (this.selectedCategoriesParams.ThanhPho) {
         const results = queryString
           ? this.districts.filter((district) =>
               district.name.toLowerCase().includes(queryString.toLowerCase())
@@ -468,30 +446,9 @@ export default {
         });
         callback(mappedResult);
       } else {
-        callback(this.cities.map((city) => ({ value: city.name, label: city.name })));
-      }
-    },
-    handleSelect(item) {
-      this.selectedCategoriesParams.district = item;
-    },
-    goToEstateDetails(id) {
-      this.$router.push({ name: "estate", params: { id: id } });
-    },
-    async getRealEstates() {
-      try {
-        const response = await RealEstateService.getAllRealEstates();
-        const mappedRealEstates = response.map((estate) => {
-          return {
-            ...estate,
-            bat_dong_san: {
-              ...estate.bat_dong_san,
-              HinhAnh: JSON.parse(estate.bat_dong_san.HinhAnh || ""),
-            },
-          };
-        });
-        this.allRealEstates = mappedRealEstates;
-      } catch (error) {
-        console.log(error);
+        callback(
+          this.cities.map((city) => ({ value: city.name, label: city.name }))
+        );
       }
     },
     // input: Thành Phố Hà Nội => output: Hà Nội
@@ -530,6 +487,24 @@ export default {
         });
     },
   },
+  watch: {
+    currentPage() {
+      this.getRealEstates(this.selectedCategoriesParams);
+    },
+    selectedCategoriesParams: {
+      handler() {
+        this.getRealEstates(this.selectedCategoriesParams);
+        this.currentPage = 1;
+      },
+      deep: true,
+    },
+    $route: {
+      handler() {
+        this.routerRealEstateType();
+      },
+      deep: true,
+    },
+  },
 };
 </script>
 
@@ -540,7 +515,7 @@ export default {
 
 .el-pagination.is-background .el-pager li.active {
   background-color: #e03c31 !important;
-  color: #FFF;
+  color: #fff;
 }
 
 .input-with-select .el-input-group__prepend {

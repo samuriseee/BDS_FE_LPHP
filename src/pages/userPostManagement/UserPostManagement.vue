@@ -31,6 +31,8 @@
               <RealEstateCardItem
                 :estate="estate"
                 @goToEstateDetails="goToEstateDetails"
+                @hidePost="hidePost"
+                @deletePost="deletePost"
               />
             </a-col>
           </a-row>
@@ -43,6 +45,8 @@
               <RealEstateCardItem
                 :estate="estate"
                 @goToEstateDetails="goToEstateDetails"
+                @hidePost="hidePost"
+                @deletePost="deletePost"
               />
             </a-col>
           </a-row>
@@ -55,6 +59,8 @@
               <RealEstateCardItem
                 :estate="estate"
                 @goToEstateDetails="goToEstateDetails"
+                @hidePost="hidePost"
+                @deletePost="deletePost"
               />
             </a-col>
           </a-row>
@@ -67,6 +73,8 @@
               <RealEstateCardItem
                 :estate="estate"
                 @goToEstateDetails="goToEstateDetails"
+                @hidePost="hidePost"
+                @deletePost="deletePost"
               />
             </a-col>
           </a-row>
@@ -82,6 +90,7 @@ import { RealEstatePostStatus } from "@/constants/index";
 import RealEstateCardItem from "./RealEstateCardItem.vue";
 import EstateCardOnListPage from "@/components/UserPageComponent/EstateCardOnListPage.vue";
 import { mapGetters } from "vuex";
+import { message } from "ant-design-vue";
 export default {
   name: "UserPostManagement",
   data() {
@@ -120,7 +129,7 @@ export default {
       );
     },
   },
-  mounted() {
+  created() {
     this.getRealEstates();
   },
   methods: {
@@ -129,32 +138,55 @@ export default {
     },
     goToEstateDetails(estate) {
       if (estate.bat_dong_san.TrangThai == RealEstatePostStatus.CHUA_DUYET) {
-        this.$notification.success({
-          message: "Bất động sản này chưa được duyệt",
-        });
+        message.error("Bất động sản này chưa được duyệt");
+        return "";
       }
       if (estate.bat_dong_san.TrangThai == RealEstatePostStatus.KHONG_DUYET) {
-        this.$notification.success({
-          message: "Bất động sản này không được duyệt bài",
-        });
+        message.error("Bất động sản này không được duyệt bài");
+        return "";
       }
       if (estate.bat_dong_san.TrangThai == RealEstatePostStatus.VI_PHAM) {
-        this.$notification.success({
-          message:
-            "Bất động sản này vi phạm luật của trang đã gỡ xuống trang web",
-        });
+        message.error(
+          "Bất động sản này vi phạm luật của trang đã gỡ xuống hệ thống"
+        );
+        return "";
       } else {
         this.$router.push(`/estate/${estate.bat_dong_san.id}`);
       }
     },
+    async hidePost(id) {
+      try {
+        await RealEstateService.hidePost(id);
+        this.getRealEstates();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async deletePost(id) {
+      this.$confirm("Bạn có chắc chắn muốn xoá bài đăng này?", "Cảnh báo", {
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        type: "warning",
+      })
+        .then(async () => {
+          await RealEstateService.deleteRealEstatePost(id);
+          this.getRealEstates();
+          this.$message({
+            type: "success",
+            message: "Xoá bài đăng thành công",
+          });
+        })
+        .catch(() => {
+
+        });
+    },
     async getRealEstates() {
       try {
         this.loading = true;
-        const response = await RealEstateService.getAllRealEstates();
-        const postOfCurrentUser = response.filter(
-          (estate) => estate.nguoi_dung.id === this.currentUser?.id
-        );
-        const mappedRealEstates = postOfCurrentUser.map((estate) => {
+        const response = await RealEstateService.getAllRealEstates({
+          IDNguoiDung: this.currentUser.id,
+        });
+        const mappedRealEstates = response.data.map((estate) => {
           return {
             ...estate,
             bat_dong_san: {

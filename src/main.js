@@ -21,7 +21,8 @@ import { faBed, faBathtub, faPhone } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import locale from 'element-ui/lib/locale/lang/en' 
+import locale from 'element-ui/lib/locale/lang/en'
+import "./scss/element-variables.scss";
 
 library.add(faBed)
 library.add(faBathtub)

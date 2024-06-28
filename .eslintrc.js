@@ -14,6 +14,8 @@ module.exports = {
     "comma-dangle": 0,
     "vue/max-attributes-per-line": 0,
     semi: 0,
+    "curly": 0,
+    "no-useless-return": 0,
     'space-before-function-paren': 0,
     'vue/max-attributes-per-line': [
       2,

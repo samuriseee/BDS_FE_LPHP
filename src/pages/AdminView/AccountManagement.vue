@@ -14,9 +14,20 @@
     >
       Quản lý Nhân Viên
     </h1>
+    <div class="header">
+      <el-button
+        type="primary"
+        @click="handleCreateUser"
+        :style="{
+          marginBottom: '10px',
+        }"
+      >
+        <i class="el-icon-plus"></i> Thêm nhân viên
+      </el-button>
+    </div>
     <a-table
       :columns="allColumns"
-      :data-source="getIsAdmin"
+      :data-source="getIsEmployee"
       row-key="id"
       :loading="listLoading"
     >
@@ -27,30 +38,55 @@
       <span slot="action" slot-scope="text, record">
         <a-button
           type="primary"
-          @click="handleViewDetail(record)"
+          @click="handleEditUser(record)"
           :style="{
             marginRight: '10px',
           }"
         >
-          <i class="el-icon-s-operation"></i>
+            Sửa thông tin
         </a-button>
         <a-button type="danger">
-          <i class="el-icon-remove-outline"></i>
+          Đánh dấu ngừng hoạt động
         </a-button>
       </span>
     </a-table>
+
+    <el-dialog
+      title="Tạo nhân viên mới"
+      :visible.sync="openDialog"
+      width="30%"
+      center
+    >
+      <CreateEmployee />
+    </el-dialog>
+
+    <el-dialog
+      title="Sửa đổi thông tin nhân viên"
+      :visible.sync="openEditDialog"
+      width="30%"
+      center
+    >
+      <CreateEmployee :currentUser="selectedEditUser" />
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { AdminService } from "@/services/admin.service";
+import CreateEmployee from "@/pages/AdminView/CreateEmployee.vue";
 
 export default {
   name: "UserManagement",
+  components: {
+    CreateEmployee,
+  },
   data() {
     return {
       allUsers: [],
       listLoading: false,
+      openDialog: false,
+      openEditDialog: false,
+      selectedEditUser: {},
       allColumns: [
         {
           dataIndex: "ho_ten",
@@ -74,7 +110,7 @@ export default {
           scopedSlots: { customRender: "trang_thai" },
         },
         {
-          title: "Action",
+          title: "Hành động",
           key: "action",
           scopedSlots: { customRender: "action" },
         },
@@ -85,9 +121,9 @@ export default {
     this.getAllUsers();
   },
   computed: {
-    getIsAdmin() {
-        return this.allUsers.filter((user) => user.is_admin);
-    }
+    getIsEmployee() {
+      return this.allUsers.filter((user) => user.is_employee);
+    },
   },
   methods: {
     getAllUsers() {
@@ -107,6 +143,13 @@ export default {
         params: { id: record.id },
       });
     },
+    handleCreateUser() {
+      this.openDialog = true;
+    },
+    handleEditUser(record) {
+      this.selectedEditUser = record;
+      this.openEditDialog = true;
+    },
   },
 };
 </script>
@@ -122,5 +165,11 @@ h1 {
   font-size: 24px;
   margin-bottom: 20px;
   text-align: left;
+}
+
+.header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 </style>

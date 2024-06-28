@@ -309,9 +309,8 @@
             >
               <p
                 style="color: red; font-weight: 500"
-                v-if="blog.bat_dong_san.MucGia > 0"
               >
-                {{ formatCurrencyToVietnamese(blog.bat_dong_san.MucGia) }}
+                {{ blog.bat_dong_san.MucGia ? formatCurrencyToVietnamese(blog.bat_dong_san.MucGia) : "Thoả Thuận" }}
               </p>
               <p style="color: red; font-weight: 500">
                 {{ blog.bat_dong_san.DienTich }} m²
@@ -490,7 +489,7 @@ export default {
     async getRealEstates() {
       try {
         const response = await RealEstateService.getAllRealEstates();
-        const mappedRealEstates = response.map((estate) => {
+        const mappedRealEstates = response.data.map((estate) => {
           return {
             ...estate,
             bat_dong_san: {

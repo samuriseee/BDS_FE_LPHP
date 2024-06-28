@@ -32,10 +32,10 @@
             marginRight: '10px',
           }"
         >
-          <i class="el-icon-s-operation"></i>
+          Xem thông tin
         </a-button>
         <a-button type="danger">
-          <i class="el-icon-remove-outline"></i>
+          Đánh dấu vi phạm
         </a-button>
       </span>
     </a-table>

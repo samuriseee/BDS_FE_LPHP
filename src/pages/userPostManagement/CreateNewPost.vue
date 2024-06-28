@@ -672,6 +672,7 @@ select option {
 
 .price {
   display: flex;
+align-items: flex-start;
 }
 
 .Address .form-group,

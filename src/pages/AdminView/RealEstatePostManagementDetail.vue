@@ -9,89 +9,78 @@
     <a-layout
       :style="{
         background: 'transparent',
+        margin: '20px 0',
       }"
     >
-      <a-layout-header
-        :style="{
-          margin: '10px',
-          background: 'transparent',
-          display: 'flex',
-          justifyContent: 'space-between',
-        }"
-      >
-        <div>
-          <p>
-            Được đăng bài ngày
-            {{
-              moment(estateDetail.bat_dong_san.created_at || "").format(
-                "DD/MM/YYYY, h:mm"
-              )
-            }}
-          </p>
-        </div>
-        <p>
-          Người đăng bài: {{ estateDetail.nguoi_dung.ho_ten }} -
-          {{ estateDetail.nguoi_dung.email }} -
-          {{ estateDetail.nguoi_dung.so_dien_thoai }}
-        </p>
-        <div
-          v-if="
-            estateDetail.bat_dong_san.TrangThai ===
-            RealEstatePostStatus.CHUA_DUYET
-          "
-        >
-          <el-button
-            @click="changeEstateStatus(RealEstatePostStatus.DA_DUYET)"
-            type="success"
-            >Duyệt bài</el-button
-          >
-          <el-button
-            @click="changeEstateStatus(RealEstatePostStatus.KHONG_DUYET)"
-            type="info"
-            >Không xác nhận bài</el-button
-          >
-        </div>
-        <div
-          v-else-if="
-            estateDetail.bat_dong_san.TrangThai ===
-            RealEstatePostStatus.DA_DUYET
-          "
-        >
-          <el-button
-            @click="changeEstateStatus(RealEstatePostStatus.VI_PHAM)"
-            type="danger"
-            >Đánh dấu vi phạm</el-button
-          >
-        </div>
-      </a-layout-header>
       <a-layout-content>
-        <div>
-          <a-carousel
-            class="imageBox"
-            arrows
-            dots-class="slick-dots slick-thumb"
+        <div
+          :style="{
+            display: 'flex',
+          }"
+        >
+          <SliderLightBox
+            :images="estateDetail.bat_dong_san.HinhAnh"
+            :style="{
+              width: '80%',
+            }"
+          />
+          <el-card
+            shadow="never"
+            :style="{
+              textAlign: 'start',
+              width: '20%',
+            }"
           >
+              <p>
+                <span class="label">Được đăng bài ngày: </span>
+                {{
+                  moment(estateDetail.bat_dong_san.created_at || "").format(
+                    "DD/MM/YYYY, h:mm"
+                  )
+                }}
+              </p>
+            <p>
+              <span class="label">Người đăng bài:  </span>
+              {{ estateDetail.nguoi_dung.ho_ten }}
+            </p>
+            <p>
+              <span class="label">Email:  </span>
+              {{ estateDetail.nguoi_dung.email }}
+            </p>
+            <p>
+              <span class="label">Số điện thoại:  </span>
+              {{ estateDetail.nguoi_dung.so_dien_thoai }}
+            </p>
             <div
-              slot="prevArrow"
-              class="custom-slick-arrow"
-              style="left: 10px; zindex: 1"
+              v-if="
+                estateDetail.bat_dong_san.TrangThai ===
+                RealEstatePostStatus.CHUA_DUYET
+              "
             >
-              <a-icon type="left-circle" />
+              <el-button
+                @click="changeEstateStatus(RealEstatePostStatus.DA_DUYET)"
+                type="success"
+                >Duyệt bài</el-button
+              >
+              <el-button
+                @click="changeEstateStatus(RealEstatePostStatus.KHONG_DUYET)"
+                type="info"
+                >Không xác nhận bài</el-button
+              >
             </div>
             <div
-              slot="nextArrow"
-              class="custom-slick-arrow"
-              style="right: 10px"
+              v-else-if="
+                estateDetail.bat_dong_san.TrangThai ===
+                RealEstatePostStatus.DA_DUYET
+              "
             >
-              <a-icon type="right-circle" />
+              <el-button
+                @click="changeEstateStatus(RealEstatePostStatus.VI_PHAM)"
+                type="danger"
+                >Đánh dấu vi phạm</el-button
+              >
             </div>
-            <a slot="customPaging" slot-scope="props">
-              <img :src="getImgUrl(props.i)" />
-            </a>
-            <div v-for="url in estateDetail.bat_dong_san.HinhAnh" :key="url">
-              <img :src="url" />
-            </div>
-          </a-carousel>
+          </el-card>
         </div>
         <div class="detail__left--content">
           <div class="detail__left--title">
@@ -266,10 +255,12 @@ import { RealEstateService } from "@/services/real_estate.service";
 import { formatCurrencyToVietnamese } from "@/services/util";
 import { RealEstatePostStatus } from "@/constants";
 import moment from "moment";
+import SliderLightBox from "@/components/SliderLightBox.vue";
 export default {
   name: "AdminRealEstatePostManagementDetail",
   components: {
     AdminLayout,
+    SliderLightBox,
   },
   data() {
     return {
@@ -329,84 +320,11 @@ export default {
 </script>
 
 <style scoped>
-.imageBox {
-  margin: 0 auto;
-  position: relative;
-  width: 100%;
-  max-width: 700px;
-  height: auto;
-  z-index: 1;
-  display: flex;
-  transition-property: transform;
-  box-sizing: content-box;
-  background: #f2f2f2;
-}
-
-.ant-carousel >>> .slick-dots {
-  height: auto;
-}
-
-.ant-carousel >>> .slick-slider {
-  display: flex;
-  align-items: center;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0) 59%,
-    rgba(0, 0, 0, 0.65) 100%
-  );
-}
-
-.ant-carousel >>> .slick-slide img {
-  display: block;
-  margin: auto;
-  height: 500px;
-  max-width: 100%;
-  object-fit: cover;
-}
-
-.ant-carousel >>> .slick-thumb {
-  bottom: -88px;
-}
-
-.ant-carousel >>> .slick-thumb li {
-  width: 107px;
-  height: 80px;
-}
-
-.ant-carousel >>> .slick-thumb li img {
-  width: 100%;
-  height: 100%;
-  filter: grayscale(100%);
-}
-
-.ant-carousel >>> .slick-thumb li.slick-active img {
-  filter: grayscale(0%);
-}
-
-.ant-carousel >>> .custom-slick-arrow {
-  width: 25px;
-  height: 25px;
-  font-size: 25px;
-  color: #fff;
-  background-color: rgba(0, 0, 0, 0.11);
-  opacity: 0.3;
-}
-
-.ant-carousel >>> .custom-slick-arrow:before {
-  display: none;
-}
-
-.ant-carousel >>> .custom-slick-arrow:hover {
-  opacity: 0.5;
-}
-
-.ant-carousel >>> .slick-slide h3 {
-  color: #000000;
+.label {
+  font-weight: bold;
 }
 
 .detail__left--content {
-  margin-top: 100px;
   text-align: start;
 }
 

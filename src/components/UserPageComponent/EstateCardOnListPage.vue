@@ -13,9 +13,8 @@
       <div class="re_card-physicalInfo">
         <p
           style="color: red; font-weight: 500"
-          v-if="estate.bat_dong_san.MucGia > 0"
         >
-          {{ formatCurrencyToVietnamese(estate.bat_dong_san.MucGia) }}
+          {{ estate.bat_dong_san.MucGia ? formatCurrencyToVietnamese(estate.bat_dong_san.MucGia) : "Thoả Thuận" }}
         </p>
         <p style="color: red; font-weight: 500">
           {{ estate.bat_dong_san.DienTich }} m²

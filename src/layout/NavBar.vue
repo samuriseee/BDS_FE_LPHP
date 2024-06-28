@@ -5,37 +5,67 @@
     <div class="fixed navigation re__full-menu">
       <div class="rightSide">
         <div class="logo">
-          <img src="@/assets/image/CityAHomes.vn-1.png" alt="" @click="ToHome()" />
+          <img
+            src="@/assets/image/CityAHomes.vn-1.png"
+            alt=""
+            @click="ToHome()"
+          />
         </div>
         <nav>
           <el-dropdown placement="top-start">
-            <router-link :to="'/house/sell'" class="el-dropdown-link" :style="menuItemStyle">
+            <router-link
+              :to="'/house/sell'"
+              class="el-dropdown-link"
+              :style="menuItemStyle"
+            >
               Nhà đất bán
             </router-link>
             <el-dropdown-menu slot="dropdown" :style="menuDropdownStyle">
-              <el-dropdown-item v-for="item in allBuyTypes" :key="item.id">
-                <router-link :to="'/house/sell/' + item.id" :style="{
-                  color: 'black',
-                  fontWeight: '600',
-                }">{{ item.LoaiBDS }}</router-link>
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-          <el-dropdown placement="top-start">
-            <router-link :to="'/house/rent'" class="ant-dropdown-link" :style="menuItemStyle">
-              Nhà đất cho thuê
-            </router-link>
-            <el-dropdown-menu slot="dropdown" :style="menuDropdownStyle">
-              <el-dropdown-item v-for="item in allRentTypes" :key="item.id">
-                <router-link :to="'/house/rent/' + item.id" :style="{
-                  color: 'black',
-                  fontWeight: '600',
-                }">{{ item.LoaiBDS }}</router-link>
-              </el-dropdown-item>
+              <router-link
+                v-for="item in allBuyTypes"
+                :key="item.id"
+                :to="'/house/sell/' + item.id"
+              >
+                <el-dropdown-item
+                  :style="{
+                    color: 'black',
+                    fontWeight: '600',
+                  }"
+                >
+                  {{ item.LoaiBDS }}
+                </el-dropdown-item>
+              </router-link>
             </el-dropdown-menu>
           </el-dropdown>
 
-          <div v-if="isLoggedIn && isAdmin">
+          <el-dropdown placement="top-start">
+            <router-link
+              :to="'/house/rent'"
+              class="ant-dropdown-link"
+              :style="menuItemStyle"
+            >
+              Nhà đất cho thuê
+            </router-link>
+            <el-dropdown-menu slot="dropdown" :style="menuDropdownStyle">
+              <router-link
+                v-for="item in allRentTypes"
+                :key="item.id"
+                :to="'/house/rent/' + item.id"
+              >
+                <el-dropdown-item
+                  :style="{
+                    color: 'black',
+                    width: '100%',
+                    fontWeight: '600',
+                  }"
+                >
+                  {{ item.LoaiBDS }}
+                </el-dropdown-item>
+              </router-link>
+            </el-dropdown-menu>
+          </el-dropdown>
+
+          <div v-if="isLoggedIn && isAdmin || isEmployee ">
             <a-dropdown>
               <a class="ant-dropdown-link" :style="menuItemStyle">
                 Quản trị Website
@@ -45,20 +75,26 @@
                   <router-link to="/admin/dashboard">Thống kê</router-link>
                 </a-menu-item>
                 <a-menu-item>
-                  <router-link to="/admin/user-management">Quản lý người dùng</router-link>
+                  <router-link to="/admin/user-management"
+                    >Quản lý người dùng</router-link
+                  >
                 </a-menu-item>
                 <a-menu-item>
-                  <router-link to="/admin/account-management">Quản lý nhân viên</router-link>
+                  <router-link to="/admin/account-management"
+                    >Quản lý nhân viên</router-link
+                  >
                 </a-menu-item>
                 <a-menu-item>
-                  <router-link to="/admin/post-management">Quản lý tin đăng</router-link>
+                  <router-link to="/admin/post-management"
+                    >Quản lý tin đăng</router-link
+                  >
                 </a-menu-item>
               </a-menu>
             </a-dropdown>
           </div>
           <div v-if="isLoggedIn && isEmployee">
             <router-link to="/employee-page/employee-task"
-            >Quản lý công việc</router-link
+              >Quản lý công việc</router-link
             >
           </div>
         </nav>
@@ -85,15 +121,23 @@
             </div>
             <template #overlay>
               <a-menu>
-                <a-menu-item v-if="!isAdmin" :style="menuItemStyle" @click="toPostManagement()">
+                <a-menu-item
+                  v-if="!isAdmin && !isEmployee"
+                  :style="menuItemStyle"
+                  @click="toPostManagement()"
+                >
                   <a-icon :style="iconStyle" type="unordered-list" />
                   <a>Quản lý tin đăng</a>
                 </a-menu-item>
-                <a-menu-item v-if="!isAdmin" :style="menuItemStyle" @click="toProfile()">
+                <a-menu-item
+                  v-if="!isAdmin && !isEmployee"
+                  :style="menuItemStyle"
+                  @click="toProfile()"
+                >
                   <a-icon :style="iconStyle" type="user" />
                   <a>Thay đổi thông tin cá nhân</a>
                 </a-menu-item>
-                <a-menu-item v-if="!isAdmin" :style="menuItemStyle">
+                <a-menu-item v-if="!isAdmin && !isEmployee" :style="menuItemStyle">
                   <a-icon :style="iconStyle" type="unlock" />
                   <a>Thay đổi mật khẩu</a>
                 </a-menu-item>
@@ -111,7 +155,7 @@
           <a-divider type="vertical"></a-divider>
           <router-link to="/register">Đăng ký</router-link>
         </div>
-        <div v-if="!isAdmin" class="CreatePost">
+        <div v-if="!isAdmin && !isEmployee" class="CreatePost">
           <router-link to="/userPostManagement/create">Đăng tin</router-link>
         </div>
       </div>
@@ -158,7 +202,7 @@ export default {
       return this.currentUser?.is_admin || false;
     },
     isEmployee() {
-      return this.currentUser.role === "employee";
+      return this.currentUser?.is_employee || false;
     },
   },
   methods: {
@@ -169,7 +213,7 @@ export default {
       this.$router.push("/userPostManagement/list");
     },
     toProfile() {
-      this.$router.push("/userPostManagement/profile")
+      this.$router.push("/userPostManagement/profile");
     },
     logout() {
       this.$store.dispatch("logout");

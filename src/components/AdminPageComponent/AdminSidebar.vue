@@ -1,30 +1,48 @@
 <template>
   <a-layout class="layout">
-    <a-layout-sider :trigger="null"
-                    :theme="'light'"
-                    class="sidebar"
-                    :style="{
-                      maxWidth: 'auto',
-                      minWidth: 'auto',
-                      width: 'auto',
-                    }">
+
+    <a-layout-sider
+      :trigger="null"
+      :theme="'light'"
+      class="sidebar"
+      :style="{
+        maxWidth: 'auto',
+        minWidth: 'auto',
+        width: 'auto',
+      }"
+    >
+
       <el-scrollbar wrap-class="scrollbar-wrapper">
-        <el-menu :default-active="activeMenu"
-                 :collapse="isCollapsed"
-                 :unique-opened="true"
-                 :router="true"
-                 :collapse-transition="false"
-                 :style="{
-                   textAlign: 'left',
-                   minHeight: '100vh',
-                 }">
-          <template v-for="menu in menuList">
-            <el-submenu v-if="menu.children" :index="menu.index" :key="menu.index">
+        <el-menu
+          :default-active="activeMenu"
+          :collapse="isCollapsed"
+          :unique-opened="true"
+          :router="true"
+          :collapse-transition="false"
+          :style="{
+            textAlign: 'left',
+            minHeight: '100vh',
+            minWidth: '250px',
+            position: 'fixed',
+            fontWeight: 'bold',
+            fontSize: '20px'
+          }"
+        >
+          <template v-for="menu in isAdmin ? adminMenuList : employeeMenuList">
+            <el-submenu
+              v-if="menu.children"
+              :index="menu.index"
+              :key="menu.index"
+            >
               <template #title>
                 <i :class="menu.icon"></i>
                 <span>{{ menu.title }}</span>
               </template>
-              <el-menu-item v-for="child in menu.children" :index="child.index" :key="child.index">
+              <el-menu-item
+                v-for="child in menu.children"
+                :index="child.index"
+                :key="child.index"
+              >
                 <router-link :to="child.path">{{ child.title }}</router-link>
               </el-menu-item>
             </el-submenu>
@@ -35,46 +53,66 @@
             </el-menu-item>
           </template>
         </el-menu>
-
       </el-scrollbar>
     </a-layout-sider>
   </a-layout>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
-  name: 'AdminSidebar',
+  name: "AdminSidebar",
   data() {
     return {
-      activeMenu: '', // Set the active menu item here
+      activeMenu: "", // Set the active menu item here
       isCollapsed: false, // Set to true to collapse the sidebar
-      menuList: [
+      adminMenuList: [
         {
-          title: 'Thống Kê',
-          icon: 'el-icon-s-home',
-          path: '/admin/dashboard',
-          index: '/admin/dashboard',
+          title: "Thống Kê",
+          icon: "el-icon-s-home",
+          path: "/admin/dashboard",
+          index: "/admin/dashboard",
         },
         {
-          title: 'Quản lý người dùng',
-          icon: 'el-icon-user',
-          path: '/admin/user-management',
-          index: '/admin/user-management',
+          title: "Quản lý người dùng",
+          icon: "el-icon-user",
+          path: "/admin/user-management",
+          index: "/admin/user-management",
         },
         {
-          title: 'Quản lý nhân viên',
-          icon: 'el-icon-s-custom',
-          path: '/admin/account-management',
-          index: '/admin/account-management',
+          title: "Quản lý nhân viên",
+          icon: "el-icon-s-custom",
+          path: "/admin/account-management",
+          index: "/admin/account-management",
         },
         {
-          title: 'Quản lý tin đăng',
-          icon: 'el-icon-s-order',
-          path: '/admin/post-management',
-          index: '/admin/post-management',
+          title: "Quản lý tin đăng",
+          icon: "el-icon-s-order",
+          path: "/admin/post-management",
+          index: "/admin/post-management",
+        },
+      ],
+      employeeMenuList: [
+        {
+          title: "Thống Kê",
+          icon: "el-icon-s-home",
+          path: "/admin/dashboard",
+          index: "/admin/dashboard",
+        },
+        {
+          title: "Quản lý tin đăng",
+          icon: "el-icon-s-order",
+          path: "/admin/post-management",
+          index: "/admin/post-management",
         },
       ],
     };
+  },
+  computed: {
+        ...mapGetters(["currentUser"]),
+    isAdmin() {
+      return this.currentUser?.is_admin;
+    },
   },
 };
 </script>
