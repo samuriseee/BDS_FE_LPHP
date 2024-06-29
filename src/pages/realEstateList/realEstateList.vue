@@ -160,58 +160,59 @@
                 : "Toàn Quốc"
             }}</el-breadcrumb-item>
           </el-breadcrumb>
-          <h1
-            :style="{
-              fontSize: '24px',
-              lineHeight: '32px',
-              fontWeight: '500',
-              letterSpacing: '-0.2px',
-              color: '#2C2C2C',
-              display: 'block',
-              textAlign: 'left',
-              marginBottom: '10px',
-              marginLeft: '20px',
-            }"
-          >
-            {{
-              this.selectedCategoriesParams.ThanhPho
-                ? `Nhà đất ${this.businessType ? "bán" : "cho thuê"} tại
+          <a-spin :spinning="loading">
+            <h1
+              :style="{
+                fontSize: '24px',
+                lineHeight: '32px',
+                fontWeight: '500',
+                letterSpacing: '-0.2px',
+                color: '#2C2C2C',
+                display: 'block',
+                textAlign: 'left',
+                marginBottom: '10px',
+                marginLeft: '20px',
+              }"
+            >
+              {{
+                this.selectedCategoriesParams.ThanhPho
+                  ? `Nhà đất ${this.businessType ? "bán" : "cho thuê"} tại
             ${this.selectedCategoriesParams.ThanhPho}`
-                : `Nhà đất ${this.businessType ? "bán" : "cho thuê"} toàn quốc`
-            }}
-          </h1>
-          <p
-            :style="{
-              lineHeight: '32px',
-              letterSpacing: '-0.2px',
-              color: '#2C2C2C',
-              display: 'block',
-              textAlign: 'left',
-              marginLeft: '20px',
-            }"
-          >
-            Hiện đang có {{ totalRecords }} bất động sản
-          </p>
-          <a-row>
-            <a-col v-for="estate in allRealEstates" :key="estate.id">
-              <a-spin :spinning="loading">
+                  : `Nhà đất ${this.businessType ? "bán" : "cho thuê"} toàn quốc`
+              }}
+            </h1>
+            <p
+              :style="{
+                lineHeight: '32px',
+                letterSpacing: '-0.2px',
+                color: '#2C2C2C',
+                display: 'block',
+                textAlign: 'left',
+                marginLeft: '20px',
+              }"
+            >
+              Hiện đang có {{ totalRecords }} bất động sản
+            </p>
+            <a-row>
+              <a-col v-for="estate in allRealEstates" :key="estate.id">
                 <EstateCardOnListPage
                   :estate="estate"
                   @goToEstateDetails="goToEstateDetails"
                 />
-              </a-spin>
-            </a-col>
-          </a-row>
-          <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-size="itemsPerPage"
-            layout="total, prev, pager, next, jumper"
-            :total="totalRecords"
-            background
-          >
-          </el-pagination>
+              </a-col>
+            </a-row>
+            <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="currentPage"
+              :page-size="itemsPerPage"
+              layout="total, prev, pager, next, jumper"
+              :total="totalRecords"
+              background
+            >
+            </el-pagination>
+          </a-spin>
+
         </a-layout-content>
         <a-layout-sider
           :style="{
@@ -364,11 +365,6 @@ export default {
     },
     allCurrentRealEstateTypes() {
       return this.allRealEstateType
-        ? // eslint-disable-next-line eqeqeq
-          this.allRealEstateType.filter(
-            (item) => item.BanHayChoThue == Boolean(this.businessType)
-          )
-        : [];
     },
   },
   created() {

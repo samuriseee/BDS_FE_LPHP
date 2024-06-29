@@ -45,9 +45,15 @@
         >
             Sửa thông tin
         </a-button>
-        <a-button type="danger">
-          Đánh dấu ngừng hoạt động
-        </a-button>
+        <a-popconfirm
+          title="Xác nhận dừng hoạt động người dùng này?"
+          ok-text="Xác nhận"
+          cancel-text="Không"
+          @confirm="confirmDeactivate(record)"
+          @cancel="()=>{}"
+        >
+          <el-button type="danger">Đánh dấu người dùng vi phạm</el-button>
+        </a-popconfirm>
       </span>
     </a-table>
 
@@ -57,7 +63,7 @@
       width="30%"
       center
     >
-      <CreateEmployee />
+      <CreateEmployee @close-dialog="closeDialog()" />
     </el-dialog>
 
     <el-dialog
@@ -66,7 +72,7 @@
       width="30%"
       center
     >
-      <CreateEmployee :currentUser="selectedEditUser" />
+      <CreateEmployee :currentUser="selectedEditUser" :isEditing="true" @close-dialog="closeDialog()" />
     </el-dialog>
   </div>
 </template>
@@ -137,18 +143,28 @@ export default {
           console.log(error);
         });
     },
-    handleViewDetail(record) {
-      this.$router.push({
-        name: "UserDetail",
-        params: { id: record.id },
-      });
-    },
     handleCreateUser() {
       this.openDialog = true;
     },
     handleEditUser(record) {
       this.selectedEditUser = record;
       this.openEditDialog = true;
+    },
+    closeDialog() {
+      this.openDialog = false;
+      this.openEditDialog = false;
+      this.getAllUsers();
+    },
+    async confirmDeactivate(record) {
+      try {
+        await AdminService.updateUser(this.record.id, {
+          ...record,
+          trang_thai: false,
+        });
+        this.getAllUsers();
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };

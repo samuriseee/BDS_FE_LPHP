@@ -41,7 +41,7 @@
     <el-form-item>
       <el-button type="primary"
                  @click="submitForm"
-      >{{ isEdit ? 'Cập nhật' : 'Tạo mới nhân viên'}}</el-button
+      >{{ isEditing ? 'Cập nhật' : 'Tạo mới nhân viên'}}</el-button
       >
     </el-form-item>
   </el-form>
@@ -73,6 +73,10 @@ export default {
       type: Object,
       default: () => [],
     },
+    isEditing: {
+      type: Boolean,
+      default: false,
+    },
   },
   watch: {
     currentUser: {
@@ -93,11 +97,6 @@ export default {
       ngay_sinh: { required },
     },
   },
-  computed: {
-    isEdit() {
-      return !!this.currentUser;
-    },
-  },
   methods: {
     async submitForm() {
       this.$v.$touch();
@@ -106,16 +105,23 @@ export default {
         return;
       }
       try {
-        if (this.isEdit) {
+        if (this.isEditing) {
           await AdminService.updateUser(this.currentUser.id, this.user);
           this.$message.success("Cập nhật nhân viên thành công");
-          this.$router.push("/admin/account-management");
+          this.$emit("closeDialog");
           return;
         } else {
-          await AdminService.createNewUser(this.user);
+          await AdminService.createNewUser({
+            ...this.user,
+            cccd: ("123456789" + Math.floor(Math.random() * 1000)).toString(),
+            mat_khau: "123456",
+            is_admin: false,
+            is_employee: true,
+          });
         }
         this.$message.success("Tạo nhân viên thành công");
-        this.$router.push("/admin/account-management");
+        this.$emit("closeDialog");
+        return;
       } catch (error) {
         this.$message.error("Tạo nhân viên thất bại");
       }

@@ -16,7 +16,7 @@
     </h1>
     <a-table
       :columns="allColumns"
-      :data-source="allUsers"
+      :data-source="onlyGetUsers"
       row-key="id"
       :loading="listLoading"
     >
@@ -27,16 +27,22 @@
       <span slot="action" slot-scope="text, record">
         <a-button
           type="primary"
-          @click="handleViewDetail(record)"
+          @click="handleViewUserDetail(record)"
           :style="{
             marginRight: '10px',
           }"
         >
           Xem thông tin
         </a-button>
-        <a-button type="danger">
-          Đánh dấu vi phạm
-        </a-button>
+        <a-popconfirm
+          title="Xác nhận dừng hoạt động người dùng này?"
+          ok-text="Xác nhận"
+          cancel-text="Không"
+          @confirm="confirmDeactivate()"
+          @cancel="()=>{}"
+        >
+          <el-button type="danger">Đánh dấu người dùng vi phạm</el-button>
+        </a-popconfirm>
       </span>
     </a-table>
   </div>
@@ -84,24 +90,36 @@ export default {
   created() {
     this.getAllUsers();
   },
+  computed: {
+    onlyGetUsers() {
+      return this.allUsers.filter((user) => !user.is_admin && !user.is_employee);
+    },
+  },
   methods: {
     getAllUsers() {
       this.loading = true;
       AdminService.getAllUsers()
         .then((response) => {
           this.allUsers = response;
-          console.log("res", response);
           this.listLoading = false;
         })
         .catch((error) => {
           console.log(error);
         });
     },
-    handleViewDetail(record) {
-      this.$router.push({
-        name: "UserDetail",
-        params: { id: record.id },
-      });
+    handleViewUserDetail(record) {
+      this.$router.push(`/admin/user-management/${record.id}`);
+    },
+    async confirmDeactivate() {
+      try {
+        await AdminService.updateUser(this.userId, {
+          ...this.currentUser,
+          trang_thai: !this.currentUser.trang_thai,
+        });
+        this.getUserById(this.currentUser.id);
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };

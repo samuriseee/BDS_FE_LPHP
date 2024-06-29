@@ -82,8 +82,8 @@ export default {
         {
           title: "Quản lý nhân viên",
           icon: "el-icon-s-custom",
-          path: "/admin/account-management",
-          index: "/admin/account-management",
+          path: "/admin/employee-management",
+          index: "/admin/employee-management",
         },
         {
           title: "Quản lý tin đăng",

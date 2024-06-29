@@ -80,7 +80,7 @@
                   >
                 </a-menu-item>
                 <a-menu-item>
-                  <router-link to="/admin/account-management"
+                  <router-link to="/admin/employee-management"
                     >Quản lý nhân viên</router-link
                   >
                 </a-menu-item>

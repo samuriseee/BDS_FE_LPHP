@@ -37,6 +37,21 @@ export class RealEstateService extends BaseService {
     }
   }
 
+  static async getPredictedPrice(params) {
+    try {
+      const response = await this.request().get(
+        `${this.entity}/du_doan_gia/?${formatParams(params)}`
+      );
+      return response.data;
+    } catch (error) {
+      console.log("error", error);
+      const message = error.response.data
+        ? error.response.data.error
+        : error.response.statusText;
+      throw new ErrorWrapper(error, message);
+    }
+  }
+
   static async createNewRealEstatePost(data) {
     assert.object(data, { required: true });
 

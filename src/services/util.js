@@ -131,3 +131,11 @@ export function formatCurrencyToVietnamese(value) {
 
   return value.toString();
 }
+
+export function formatDate(ISOString) {
+  const date = new Date(ISOString);
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+}

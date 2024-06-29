@@ -84,33 +84,6 @@ export default {
               title: "Danh sách tin",
               href: "/userPostManagement/list",
             },
-            {
-              key: "1-3",
-              title: "Tin nháp",
-              href: "/userPostManagement/draft",
-            },
-          ],
-        },
-        {
-          key: "sub2",
-          icon: "video-camera",
-          title: "Quản lý tài chính",
-          children: [
-            {
-              key: "2-1",
-              title: "Lịch sử giao dịch",
-              href: "/userPostManagement/transaction-history",
-            },
-            {
-              key: "2-2",
-              title: "Nạp tiền",
-              href: "/userPostManagement/deposit",
-            },
-            {
-              key: "2-3",
-              title: "Rút tiền",
-              href: "/userPostManagement/withdraw",
-            },
           ],
         },
         {
@@ -121,12 +94,7 @@ export default {
             {
               key: "3-1",
               title: "Chỉnh sửa thông tin cá nhân",
-              href: "/userPostManagement/edit-profile",
-            },
-            {
-              key: "3-2",
-              title: "Cài đặt tài khoản",
-              href: "/userPostManagement/account-setting",
+              href: "/userPostManagement/profile",
             },
           ],
         },

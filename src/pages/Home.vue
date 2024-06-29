@@ -2,11 +2,9 @@
   <HomeLayout>
     <div class="home">
       <div class="hero-section">
-        <el-carousel trigger="click" class="full-width-carousel" height="600px">
-          <el-carousel-item v-for="url in imgUrls" :key="url">
-            <img :src="url" alt="" />
-          </el-carousel-item>
-        </el-carousel>
+        <div class="content-section">
+
+        </div>
       </div>
       <div
         class="wrapper"
@@ -517,17 +515,23 @@ export default {
     justify-content: center;
     align-items: flex-start;
     position: relative;
+    width: 100%;
+    height: 600px;
+    background-image: url("https://scontent.fdad3-4.fna.fbcdn.net/v/t39.30808-6/291574898_556241016166570_4470157016291908302_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=P_IBtzRV5SIQ7kNvgFi3En7&_nc_ht=scontent.fdad3-4.fna&oh=00_AYAcX0mMXB7_MdAO91y2mnyFFId6WivKEtkGWinnxaUMEQ&oe=6686110D");
+    background-size: cover;
+    background-position: center;
+    backdrop-filter: brightness(50%);
+  }
 
-    .full-width-carousel {
-      width: 100%;
-    }
-
-    img {
-      width: 100%;
-      height: auto;
-      object-fit: cover;
-      filter: brightness(50%);
-    }
+  .hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: -1;
   }
 
   .content-section {

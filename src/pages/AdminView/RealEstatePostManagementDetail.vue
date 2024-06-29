@@ -294,9 +294,6 @@ export default {
         console.log(error);
       }
     },
-    getImgUrl(index) {
-      return this.estateDetail.bat_dong_san.HinhAnh[index];
-    },
     async changeEstateStatus(status) {
       try {
         const updateEstatePayload = {

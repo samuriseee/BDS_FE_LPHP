@@ -12,11 +12,13 @@ import realEstateDetail from "../pages/realEstateList/realEstateDetail.vue";
 import Dashboard from "@/pages/AdminView/Dashboard.vue";
 import RealEstatePostManagement from "@/pages/AdminView/RealEstatePostManagement.vue";
 import UserManagement from "@/pages/AdminView/UserManagement.vue";
-import AccountManagement from "@/pages/AdminView/AccountManagement.vue";
+import UserManagementDetail from "@/pages/AdminView/UserManagementDetail.vue";
+import EmployeeManagement from "@/pages/AdminView/EmployeeManagement.vue";
 import admin from "@/pages/AdminView/index.vue";
 import AdminRealEstateDetail from "@/pages/AdminView/RealEstatePostManagementDetail.vue";
 import ForgotPasswordView from "@/pages/AuthenView/ForgotPasswordView.vue";
 import ProfilePage from "@/pages/userPostManagement/ProfilePage.vue";
+import PreviewOthersProfile from "@/pages/userPostManagement/PreviewOthersProfile.vue";
 
 import { DOMAIN_TITLE } from "../.env";
 
@@ -72,6 +74,11 @@ export const routes = [
     meta: { title: `${DOMAIN_TITLE} | real estate detail` },
   },
   {
+    path: '/profile/:id',
+    component: PreviewOthersProfile,
+    name: 'PreviewOthersProfile',
+  },
+  {
     path: "/admin",
     meta: { isAuth: true, title: `${DOMAIN_TITLE} | admin` },
     component: admin,
@@ -97,9 +104,14 @@ export const routes = [
         component: UserManagement,
       },
       {
-        path: "account-management",
-        name: "accountManagement",
-        component: AccountManagement,
+        path: "user-management/:id",
+        name: "userManagementDetail",
+        component: UserManagementDetail,
+      },
+      {
+        path: "employee-management",
+        name: "employeeManagement",
+        component: EmployeeManagement,
       },
     ],
   },

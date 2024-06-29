@@ -241,6 +241,8 @@
                 :styles="styles"
                 :width="width"
                 :height="height"
+                borderWidth="13"
+
               />
             </div>
 
@@ -257,7 +259,7 @@
                   marginBottom: '10px',
                 }"
               >
-                Biểu đồ dự đoán giá tương lai
+                Dự đoán giá bất động sản trong tương lai
               </h1>
               <LineChartGenerator
                 :chart-options="chartOptions"
@@ -276,6 +278,7 @@
         <a-layout-sider
           :style="{
             background: 'transparent',
+            padding: '0 20px',
           }"
         >
           <a-card
@@ -283,8 +286,10 @@
               border: '1px solid #f2f2f2',
               borderRadius: '8px',
               marginBottom: '16px',
+              cursor: 'pointer',
             }"
             class="re_card-author"
+            @click="viewProfile(estateDetail.nguoi_dung.id)"
           >
             <div
               :style="{
@@ -312,6 +317,15 @@
               >
                 {{ estateDetail.nguoi_dung.ho_ten }}
               </h3>
+              <p
+                :style="{
+                  fontSize: '14px',
+                  color: '#b3b3b3',
+                  marginTop: '-10px'
+                }"
+              >
+               xem thêm {{ estateDetail.nguoi_dung.ho_ten }} bất động sản
+               </p>
             </div>
             <div class="button-section">
               <el-button
@@ -328,6 +342,30 @@
               <el-button> Yêu cầu liên hệ lại </el-button>
             </div>
           </a-card>
+          <a-card
+            :style="{
+              border: '1px solid #f2f2f2',
+              borderRadius: '8px',
+              marginBottom: '16px',
+              width: '250px'
+            }"
+            class="re_card-author"
+          >
+            <div :style="{
+              display: 'flex',
+              flexDirection: 'row',
+              gap: '20px',
+              textAlign: 'justify',
+            }">
+              <i class="el-icon-bell"
+                 :style="{
+                fontSize: '30px',
+                color: 'red',
+                marginTop: '10px'
+              }"></i>
+              <p>Không nên đặt cọc, giao dịch trước khi xem nhà và xác minh thông tin của người cho thuê. </p>
+            </div>
+          </a-card>
         </a-layout-sider>
       </a-layout>
     </a-layout>
@@ -339,7 +377,7 @@ import SliderLightBox from "@/components/SliderLightBox.vue";
 import { Line as LineChartGenerator } from "vue-chartjs/legacy";
 import CommonLayout from "@/layout/CommonLayout.vue";
 import { RealEstateService } from "@/services/real_estate.service";
-import { formatCurrencyToVietnamese } from "@/services/util";
+import { formatCurrencyToVietnamese, formatDate } from "@/services/util";
 import {
   Chart as ChartJS,
   Title,
@@ -448,6 +486,50 @@ export default {
   },
   methods: {
     formatCurrencyToVietnamese,
+    viewProfile(id) {
+      this.$router.push(`/profile/${id}`);
+    },
+    async getChartData(params) {
+      try {
+        const response = await RealEstateService.getPredictedPrice({
+          ...params
+        })
+        if (response) {
+          this.chartData = {
+            labels: response.labels,
+            datasets: [
+              {
+                label: "Giá cao nhất",
+                backgroundColor: "#C2C2C2",
+                data: response.max_prices,
+                borderColor: 'rgb(75, 192, 192)',
+                borderWidth: 4,
+              },
+              {
+                label: "Giá phổ biến nhất",
+                backgroundColor: "#f87979",
+                data: response.avg_prices,
+              },
+              {
+                label: "Giá thấp nhất",
+                backgroundColor: "#009BA1",
+                data: response.min_prices,
+              },
+              {
+                label: "Giá tin đang xem",
+                backgroundColor: "red",
+                data: response.current_price,
+                borderWidth: 15, // Increase line thickness
+                pointRadius: 15, // Increase point size
+                pointBackgroundColor: 'red', // Change point color
+              },
+            ],
+          };
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async getEstateDetail(id) {
       try {
         const response = await RealEstateService.getPostById(id);
@@ -458,15 +540,16 @@ export default {
             HinhAnh: JSON.parse(response.bat_dong_san.HinhAnh),
           },
         };
+        this.getChartData({
+          MucGia: this.estateDetail.bat_dong_san.MucGia,
+          DienTich: this.estateDetail.bat_dong_san.DienTich,
+          LoaiBDS: this.estateDetail.bat_dong_san.LoaiBDS,
+          ThanhPho: this.estateDetail.bat_dong_san.ThanhPho,
+          NgayDang: formatDate(this.estateDetail.bat_dong_san.created_at),
+        });
       } catch (error) {
         console.log(error);
       }
-    },
-    getImgUrl(index) {
-      return this.estateDetail.bat_dong_san.HinhAnh[index];
-    },
-    previewImage(url) {
-      this.selectedImagePreview = url;
     },
   },
 };
