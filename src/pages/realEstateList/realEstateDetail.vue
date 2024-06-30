@@ -229,7 +229,7 @@
                   marginBottom: '10px',
                 }"
               >
-                Biểu đồ so sánh giá các bất động sản cùng loại trong khu vực
+                 Dự đoán giá bất động sản trong tương lai
               </h1>
               <LineChartGenerator
                 :chart-options="chartOptions"
@@ -246,7 +246,7 @@
               />
             </div>
 
-            <div class="detail__left--chartjs">
+            <!-- <div class="detail__left--chartjs">
               <h1
                 :style="{
                   fontSize: '24px',
@@ -272,7 +272,7 @@
                 :width="width"
                 :height="height"
               />
-            </div>
+            </div> -->
           </div>
         </a-layout-content>
         <a-layout-sider
@@ -421,54 +421,8 @@ export default {
       height: "400",
       width: "400",
       chartData: {
-        labels: ["Q3/23", "Q4/23", "Q1/24", "Q2/24"],
-        datasets: [
-          {
-            label: "Giá cao nhất",
-            backgroundColor: "#C2C2C2",
-            data: [40, 41, 42, 43],
-          },
-          {
-            label: "Giá phổ biến nhất",
-            backgroundColor: "#f87979",
-            data: [30, 31, 32, 34],
-          },
-          {
-            label: "Giá thấp nhất",
-            backgroundColor: "#009BA1",
-            data: [25, 25, 25, 26],
-          },
-          {
-            label: "Giá tin đang xem",
-            backgroundColor: "red",
-            data: [34],
-          },
-        ],
-      },
-      chartData2: {
-        labels: ["Q1/24", "Q2/24", "Q3/24", "Q4/24"],
-        datasets: [
-          {
-            label: "Giá cao nhất",
-            backgroundColor: "#C2C2C2",
-            data: [41, 45, 50, 48],
-          },
-          {
-            label: "Giá phổ biến nhất",
-            backgroundColor: "#f87979",
-            data: [40, 39, 32, 40],
-          },
-          {
-            label: "Giá thấp nhất",
-            backgroundColor: "#009BA1",
-            data: [30, 35, 38, 39],
-          },
-          {
-            label: "Giá tin đang xem",
-            backgroundColor: "red",
-            data: [34],
-          },
-        ],
+        labels: ["Q3/24", "Q4/24", "Q1/25", "Q2/25"],
+        datasets: [],
       },
       chartOptions: {
         responsive: true,
@@ -496,32 +450,22 @@ export default {
         })
         if (response) {
           this.chartData = {
-            labels: response.labels,
+            labels: ["Q3/24", "Q4/24", "Q1/25", "Q2/25"],
             datasets: [
               {
-                label: "Giá cao nhất",
+                label: "Giá dự đoán",
                 backgroundColor: "#C2C2C2",
-                data: response.max_prices,
+                data: response,
                 borderColor: 'rgb(75, 192, 192)',
                 borderWidth: 4,
               },
               {
-                label: "Giá phổ biến nhất",
-                backgroundColor: "#f87979",
-                data: response.avg_prices,
-              },
-              {
-                label: "Giá thấp nhất",
-                backgroundColor: "#009BA1",
-                data: response.min_prices,
-              },
-              {
                 label: "Giá tin đang xem",
                 backgroundColor: "red",
-                data: response.current_price,
-                borderWidth: 15, // Increase line thickness
-                pointRadius: 15, // Increase point size
-                pointBackgroundColor: 'red', // Change point color
+                data: [this.estateDetail.bat_dong_san.MucGia],
+                borderWidth: 15,
+                pointRadius: 15,
+                pointBackgroundColor: 'red'
               },
             ],
           };
@@ -540,11 +484,13 @@ export default {
             HinhAnh: JSON.parse(response.bat_dong_san.HinhAnh),
           },
         };
+         
         this.getChartData({
           MucGia: this.estateDetail.bat_dong_san.MucGia,
-          DienTich: this.estateDetail.bat_dong_san.DienTich,
           LoaiBDS: this.estateDetail.bat_dong_san.LoaiBDS,
-          ThanhPho: this.estateDetail.bat_dong_san.ThanhPho,
+          DienTich: this.estateDetail.bat_dong_san.DienTich,
+          Lat: this.estateDetail.bat_dong_san.Lat,
+          Long: this.estateDetail.bat_dong_san.Long,
           NgayDang: formatDate(this.estateDetail.bat_dong_san.created_at),
         });
       } catch (error) {

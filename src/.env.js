@@ -1,5 +1,3 @@
 export const API_PORT = '8000'
-export const API_URL = `http://localhost:${API_PORT}/api/v1/`
+export const API_URL = `http://47.129.85.79:${API_PORT}/api/v1/`
 export const DOMAIN_TITLE = 'supersite.com'
-
-// http://47.128.248.27:8000/
