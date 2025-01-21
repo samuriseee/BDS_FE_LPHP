@@ -152,7 +152,7 @@
             }"
           >
             <el-breadcrumb-item>{{
-              this.businessType ? "Bán" : "Cho Thuê"
+              this.businessType === "sell" ? "Bán" : "Cho Thuê"
             }}</el-breadcrumb-item>
             <el-breadcrumb-item>{{
               this.selectedCategoriesParams.ThanhPho
@@ -176,9 +176,9 @@
             >
               {{
                 this.selectedCategoriesParams.ThanhPho
-                  ? `Nhà đất ${this.businessType ? "bán" : "cho thuê"} tại
+                  ? `Nhà đất ${this.businessType === "sell" ? "bán" : "cho thuê"} tại
             ${this.selectedCategoriesParams.ThanhPho}`
-                  : `Nhà đất ${this.businessType ? "bán" : "cho thuê"} toàn quốc`
+                  : `Nhà đất ${this.businessType === "sell" ? "bán" : "cho thuê"} toàn quốc`
               }}
             </h1>
             <p

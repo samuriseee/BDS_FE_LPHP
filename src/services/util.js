@@ -139,3 +139,7 @@ export function formatDate(ISOString) {
   const year = date.getFullYear();
   return `${day}/${month}/${year}`;
 }
+
+export function formatNumber(number) {
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}

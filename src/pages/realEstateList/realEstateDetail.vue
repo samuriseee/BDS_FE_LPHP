@@ -216,7 +216,7 @@
               </div>
             </div>
 
-            <div class="detail__left--chartjs">
+            <!-- <div class="detail__left--chartjs">
               <h1
                 :style="{
                   fontSize: '24px',
@@ -229,7 +229,7 @@
                   marginBottom: '10px',
                 }"
               >
-                 Dự đoán giá bất động sản trong tương lai
+                Dự đoán giá bất động sản trong tương lai
               </h1>
               <LineChartGenerator
                 :chart-options="chartOptions"
@@ -242,9 +242,8 @@
                 :width="width"
                 :height="height"
                 borderWidth="13"
-
               />
-            </div>
+            </div> -->
 
             <!-- <div class="detail__left--chartjs">
               <h1
@@ -321,11 +320,11 @@
                 :style="{
                   fontSize: '14px',
                   color: '#b3b3b3',
-                  marginTop: '-10px'
+                  marginTop: '-10px',
                 }"
               >
-               xem thêm {{ estateDetail.nguoi_dung.ho_ten }} bất động sản
-               </p>
+                xem thêm {{ estateDetail.nguoi_dung.ho_ten }} bất động sản
+              </p>
             </div>
             <div class="button-section">
               <el-button
@@ -347,23 +346,30 @@
               border: '1px solid #f2f2f2',
               borderRadius: '8px',
               marginBottom: '16px',
-              width: '250px'
+              width: '250px',
             }"
             class="re_card-author"
           >
-            <div :style="{
-              display: 'flex',
-              flexDirection: 'row',
-              gap: '20px',
-              textAlign: 'justify',
-            }">
-              <i class="el-icon-bell"
-                 :style="{
-                fontSize: '30px',
-                color: 'red',
-                marginTop: '10px'
-              }"></i>
-              <p>Không nên đặt cọc, giao dịch trước khi xem nhà và xác minh thông tin của người cho thuê. </p>
+            <div
+              :style="{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: '20px',
+                textAlign: 'justify',
+              }"
+            >
+              <i
+                class="el-icon-bell"
+                :style="{
+                  fontSize: '30px',
+                  color: 'red',
+                  marginTop: '10px',
+                }"
+              ></i>
+              <p>
+                Không nên đặt cọc, giao dịch trước khi xem nhà và xác minh thông
+                tin của người cho thuê.
+              </p>
             </div>
           </a-card>
         </a-layout-sider>
@@ -446,8 +452,8 @@ export default {
     async getChartData(params) {
       try {
         const response = await RealEstateService.getPredictedPrice({
-          ...params
-        })
+          ...params,
+        });
         if (response) {
           this.chartData = {
             labels: ["Q3/24", "Q4/24", "Q1/25", "Q2/25"],
@@ -456,7 +462,7 @@ export default {
                 label: "Giá dự đoán",
                 backgroundColor: "#C2C2C2",
                 data: response,
-                borderColor: 'rgb(75, 192, 192)',
+                borderColor: "rgb(75, 192, 192)",
                 borderWidth: 4,
               },
               {
@@ -465,7 +471,7 @@ export default {
                 data: [this.estateDetail.bat_dong_san.MucGia],
                 borderWidth: 15,
                 pointRadius: 15,
-                pointBackgroundColor: 'red'
+                pointBackgroundColor: "red",
               },
             ],
           };
@@ -484,7 +490,7 @@ export default {
             HinhAnh: JSON.parse(response.bat_dong_san.HinhAnh),
           },
         };
-         
+
         this.getChartData({
           MucGia: this.estateDetail.bat_dong_san.MucGia,
           LoaiBDS: this.estateDetail.bat_dong_san.LoaiBDS,
