@@ -24,7 +24,7 @@
         <a-tag v-if="trang_thai == true" color="green">Hoạt động</a-tag>
         <a-tag v-else color="red">Cảnh cáo vi phạm</a-tag>
       </span>
-      <span slot="action" slot-scope="text, record">
+      <span slot="action" slot-scope="text, record, trang_thai">
         <a-button
           type="primary"
           @click="handleViewUserDetail(record)"
@@ -35,13 +35,24 @@
           Xem thông tin
         </a-button>
         <a-popconfirm
+          v-if="trang_thai == true"
           title="Xác nhận dừng hoạt động người dùng này?"
           ok-text="Xác nhận"
           cancel-text="Không"
-          @confirm="confirmDeactivate()"
-          @cancel="()=>{}"
+          @confirm="confirmDeactivate(record)"
+          @cancel="() => {}"
         >
           <el-button type="danger">Đánh dấu người dùng vi phạm</el-button>
+        </a-popconfirm>
+        <a-popconfirm
+          v-if="!trang_thai"
+          title="Xác nhận mở lại hoạt động người dùng này?"
+          ok-text="Xác nhận"
+          cancel-text="Không"
+          @confirm="confirmDeactivate(record)"
+          @cancel="() => {}"
+        >
+          <el-button type="danger">Mở hoạt động người dùng này</el-button>
         </a-popconfirm>
       </span>
     </a-table>
@@ -92,7 +103,9 @@ export default {
   },
   computed: {
     onlyGetUsers() {
-      return this.allUsers.filter((user) => !user.is_admin && !user.is_employee);
+      return this.allUsers.filter(
+        (user) => !user.is_admin && !user.is_employee
+      );
     },
   },
   methods: {
@@ -110,13 +123,15 @@ export default {
     handleViewUserDetail(record) {
       this.$router.push(`/admin/user-management/${record.id}`);
     },
-    async confirmDeactivate() {
+    async confirmDeactivate(record) {
       try {
-        await AdminService.updateUser(this.userId, {
-          ...this.currentUser,
-          trang_thai: !this.currentUser.trang_thai,
+        await AdminService.updateUser(record?.id, {
+          ...record,
+          mat_khau: record.mat_khau || "",
+          trang_thai: !record.trang_thai,
         });
-        this.getUserById(this.currentUser.id);
+        this.getUserById(record.id);
+        this.getAllUsers();
       } catch (error) {
         console.log(error);
       }

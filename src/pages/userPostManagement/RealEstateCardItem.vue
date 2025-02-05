@@ -1,6 +1,6 @@
 <template>
   <div class="real-estate-card-item">
-    <div @click="handleViewDetail">
+    <div @click="handleViewDetail" style="cursor: pointer; display: flex">
       <el-carousel class="real-estate-card-item__image">
         <el-carousel-item v-for="(item, index) in estate.bat_dong_san.HinhAnh" :key="index">
           <img :src="item" />
@@ -163,7 +163,7 @@ export default {
 .real-estate-card-item__content {
     text-align: left;
     padding: 0 20px;
-    min-width: 800px;
+    min-width: 700px;
 }
 
 .real-estate-card-item__title {
@@ -184,7 +184,7 @@ export default {
 .real-estate-card-item__static {
     margin: 0 auto;
     border-left: 1px solid #ebeef5;
-    padding: 0 0 0 50px;
+    padding: 0 20px 0 20px;
 }
 
 </style>

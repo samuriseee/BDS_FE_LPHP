@@ -14,7 +14,6 @@
               <span>CÔNG TY CỔ PHẦN PROPERTYGURU VIỆT NAM</span>
             </span>
             <div class="footer-div03">
-              <span class="footer-text002"></span>
               <span class="footer-text003">
                 <span>
                   Tầng 31, Keangnam Hanoi Landmark, Phạm Hùng, Nam Từ Liêm,
@@ -23,22 +22,9 @@
               </span>
             </div>
             <div class="footer-div04">
-              <span class="footer-text005"></span>
               <span class="footer-text006">
                 <span>(024) 3562 5939 - (024) 3562 5940</span>
               </span>
-            </div>
-            <div class="footer-div05">
-              <img
-                src="public/external/googleplaypng3386-x6zn-200h.png"
-                alt="googleplaypng3386"
-                class="footer-googleplaypng"
-              />
-              <img
-                src="public/external/appstorepng3386-6e6-200h.png"
-                alt="appstorepng3386"
-                class="footer-appstorepng"
-              />
             </div>
           </div>
           <div class="footer-div06">
@@ -144,12 +130,6 @@
                     />
                   </div>
                 </div>
-                <div class="footer-div22">
-                  <span class="footer-text060">
-                    <span>QUỐC GIA &amp; NGÔN NGỮ</span>
-                  </span>
-                  <div class="footer-divdiv-languages"></div>
-                </div>
               </div>
             </div>
           </div>
@@ -158,7 +138,7 @@
         <div class="footer-div23">
           <div class="footer-div24">
             <span class="footer-text062">
-              <span> Xem chi nhánh của CityAHomes</span>
+              <span>Xem chi nhánh của CityAHomes</span>
             </span>
           </div>
           <div class="footer-div25">
@@ -358,22 +338,6 @@
                   tin từ website này.
                 </span>
               </span>
-            </div>
-          </div>
-          <div class="footer-div48">
-            <img
-              src="public/external/dadangkibctsvg3396-zl3.svg"
-              alt="dadangkibctsvg3396"
-              class="footer-dadangkibctsvg"
-            />
-            <div class="footer-div49">
-              <span class="footer-text136"></span>
-              <span class="footer-text137"></span>
-              <div class="footer-i">
-                <span class="footer-text138">
-                  <span class="footer-text139"> </span>
-                </span>
-              </div>
             </div>
           </div>
         </div>

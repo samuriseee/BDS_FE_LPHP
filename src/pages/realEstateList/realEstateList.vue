@@ -28,10 +28,11 @@
               placeholder="Nhập địa điểm bạn đang tìm kiếm..."
               v-model="selectedCategoriesParams.TieuDe"
               class="input-with-select"
-              autocomplete="on"
+              autocomplete="off"
               :style="{
                 width: '100%',
               }"
+              :fetch-suggestions="querySearch"
             >
               <el-select
                 slot="prepend"

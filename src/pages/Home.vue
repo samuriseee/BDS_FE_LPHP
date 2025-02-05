@@ -3,7 +3,15 @@
     <div class="home">
       <div class="hero-section">
         <div class="content-section">
-
+          <el-carousel height="600px" motion-blur>
+            <el-carousel-item v-for="item in imgUrls" :key="item">
+              <img
+                style="width: 100%; height: 600px; object-fit: cover"
+                :src="item"
+                alt=""
+              />
+            </el-carousel-item>
+          </el-carousel>
         </div>
       </div>
       <div
@@ -305,10 +313,12 @@
                 gap: '10px',
               }"
             >
-              <p
-                style="color: red; font-weight: 500"
-              >
-                {{ blog.bat_dong_san.MucGia ? formatCurrencyToVietnamese(blog.bat_dong_san.MucGia) : "Thoả Thuận" }}
+              <p style="color: red; font-weight: 500">
+                {{
+                  blog.bat_dong_san.MucGia
+                    ? formatCurrencyToVietnamese(blog.bat_dong_san.MucGia)
+                    : "Thoả Thuận"
+                }}
               </p>
               <p style="color: red; font-weight: 500">
                 {{ blog.bat_dong_san.DienTich }} m²
@@ -523,7 +533,7 @@ export default {
     backdrop-filter: brightness(50%);
   }
 
-  .hero-section::before {
+  .content-section::before {
     content: "";
     position: absolute;
     top: 0;
@@ -535,8 +545,10 @@ export default {
   }
 
   .content-section {
-    padding: 20px;
+    width: 100%;
+    height: 100%;
     text-align: center;
+
   }
 }
 </style>
