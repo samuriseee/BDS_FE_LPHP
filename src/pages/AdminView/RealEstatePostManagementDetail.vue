@@ -31,24 +31,24 @@
               width: '20%',
             }"
           >
-              <p>
-                <span class="label">Được đăng bài ngày: </span>
-                {{
-                  moment(estateDetail.bat_dong_san.created_at || "").format(
-                    "DD/MM/YYYY, h:mm"
-                  )
-                }}
-              </p>
             <p>
-              <span class="label">Người đăng bài:  </span>
+              <span class="label">Được đăng bài ngày: </span>
+              {{
+                moment(estateDetail.bat_dong_san.created_at || "").format(
+                  "DD/MM/YYYY, h:mm"
+                )
+              }}
+            </p>
+            <p>
+              <span class="label">Người đăng bài: </span>
               {{ estateDetail.nguoi_dung.ho_ten }}
             </p>
             <p>
-              <span class="label">Email:  </span>
+              <span class="label">Email: </span>
               {{ estateDetail.nguoi_dung.email }}
             </p>
             <p>
-              <span class="label">Số điện thoại:  </span>
+              <span class="label">Số điện thoại: </span>
               {{ estateDetail.nguoi_dung.so_dien_thoai }}
             </p>
             <div
@@ -78,6 +78,20 @@
                 @click="changeEstateStatus(RealEstatePostStatus.VI_PHAM)"
                 type="danger"
                 >Đánh dấu vi phạm</el-button
+              >
+            </div>
+            <div
+              v-if="
+                estateDetail.bat_dong_san.TrangThai ===
+                  RealEstatePostStatus.VI_PHAM ||
+                estateDetail.bat_dong_san.TrangThai ===
+                  RealEstatePostStatus.KHONG_DUYET
+              "
+            >
+              <el-button
+                @click="changeEstateStatus(RealEstatePostStatus.DA_DUYET)"
+                type="success"
+                >Duyệt lại bài</el-button
               >
             </div>
           </el-card>
