@@ -67,12 +67,12 @@ export default {
       activeMenu: "", // Set the active menu item here
       isCollapsed: false, // Set to true to collapse the sidebar
       adminMenuList: [
-        {
-          title: "Thống Kê",
-          icon: "el-icon-s-home",
-          path: "/admin/dashboard",
-          index: "/admin/dashboard",
-        },
+        // {
+        //   title: "Thống Kê",
+        //   icon: "el-icon-s-home",
+        //   path: "/admin/dashboard",
+        //   index: "/admin/dashboard",
+        // },
         {
           title: "Quản lý người dùng",
           icon: "el-icon-user",
@@ -93,12 +93,12 @@ export default {
         },
       ],
       employeeMenuList: [
-        {
-          title: "Thống Kê",
-          icon: "el-icon-s-home",
-          path: "/admin/dashboard",
-          index: "/admin/dashboard",
-        },
+        // {
+        //   title: "Thống Kê",
+        //   icon: "el-icon-s-home",
+        //   path: "/admin/dashboard",
+        //   index: "/admin/dashboard",
+        // },
         {
           title: "Quản lý tin đăng",
           icon: "el-icon-s-order",

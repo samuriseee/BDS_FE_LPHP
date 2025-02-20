@@ -65,15 +65,15 @@
             </el-dropdown-menu>
           </el-dropdown>
 
-          <div v-if="isLoggedIn && isAdmin || isEmployee ">
+          <div v-if="isLoggedIn && isAdmin">
             <a-dropdown>
               <a class="ant-dropdown-link" :style="menuItemStyle">
                 Quản trị Website
               </a>
               <a-menu slot="overlay" :style="menuDropdownStyle">
-                <a-menu-item>
+                <!-- <a-menu-item>
                   <router-link to="/admin/dashboard">Thống kê</router-link>
-                </a-menu-item>
+                </a-menu-item> -->
                 <a-menu-item>
                   <router-link to="/admin/user-management"
                     >Quản lý người dùng</router-link
@@ -93,9 +93,23 @@
             </a-dropdown>
           </div>
           <div v-if="isLoggedIn && isEmployee">
-            <router-link to="/employee-page/employee-task"
+            <a-dropdown>
+              <a class="ant-dropdown-link" :style="menuItemStyle">
+                Quản trị Website
+              </a>
+              <a-menu slot="overlay" :style="menuDropdownStyle">
+                <a-menu-item>
+                  <router-link to="/admin/post-management"
+                    >Quản lý tin đăng</router-link
+                  >
+                </a-menu-item>
+              </a-menu>
+            </a-dropdown>
+          </div>
+          <div v-if="isLoggedIn && isEmployee">
+            <!-- <router-link to="/employee-page/employee-task"
               >Quản lý công việc</router-link
-            >
+            > -->
           </div>
         </nav>
       </div>
@@ -137,7 +151,10 @@
                   <a-icon :style="iconStyle" type="user" />
                   <a>Thay đổi thông tin cá nhân</a>
                 </a-menu-item>
-                <a-menu-item v-if="!isAdmin && !isEmployee" :style="menuItemStyle">
+                <a-menu-item
+                  v-if="!isAdmin && !isEmployee"
+                  :style="menuItemStyle"
+                >
                   <a-icon :style="iconStyle" type="unlock" />
                   <a>Thay đổi mật khẩu</a>
                 </a-menu-item>

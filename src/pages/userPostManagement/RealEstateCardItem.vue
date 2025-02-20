@@ -74,7 +74,7 @@
                  }"
                  @click="handleDeletePost"
       ><i class="el-icon-delete"></i> Xoá tin</el-button>
-      <el-button v-if="estate.bat_dong_san.TrangThai === RealEstatePostStatus.DA_DUYET"
+      <!-- <el-button v-if="estate.bat_dong_san.TrangThai === RealEstatePostStatus.DA_DUYET"
                  :style="{
                    marginTop: '10px',
                    position: 'relative',
@@ -91,7 +91,7 @@
                    border: '1px solid grey'
                  }"
                  @click="handleHidePost"
-      ><i class="el-icon-view"></i> Ẩn tin</el-button>
+      ><i class="el-icon-view"></i> Ẩn tin</el-button> -->
     </div>
   </div>
 
