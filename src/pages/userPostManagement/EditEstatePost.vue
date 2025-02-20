@@ -42,7 +42,12 @@
             </div>
           </div>
 
-          <location-select @locationUpdate="locationUpdate" :ThanhPho="newEstatePost.ThanhPho" :Quan="newEstatePost.Quan" :Phuong="newEstatePost.Phuong" />
+          <location-select
+            @locationUpdate="locationUpdate"
+            :ThanhPho="newEstatePost.ThanhPho"
+            :Quan="newEstatePost.Quan"
+            :Phuong="newEstatePost.Phuong"
+          />
           <div class="form-group">
             <label for="title">Địa chỉ hiện thị trên tin đăng</label>
             <el-input
@@ -179,7 +184,7 @@
             </div>
             <div class="form-group" v-if="fieldsToRender.includes('NoiThat')">
               <label for="">Nội thất</label>
-               <el-select
+              <el-select
                 v-model="newEstatePost.NoiThat"
                 filterable
                 allow-create
@@ -374,7 +379,9 @@
         </div>
         <div class="sticky">
           <button class="btn btn-primary">Xem trước giao diện</button>
-          <button class="btn btn-primary" @click="UpdatePost()">Cập nhật tin đăng</button>
+          <button class="btn btn-primary" @click="UpdatePost()">
+            Cập nhật tin đăng
+          </button>
         </div>
       </div>
     </a-spin>
@@ -508,12 +515,6 @@ export default {
   },
   computed: {
     ...mapGetters(["allRentTypes", "allBuyTypes", "currentUser"]),
-    fieldsToRender() {
-      if (!this.newEstatePost.LoaiBDS) return [];
-      const typeOfInfo = this.DangThongTin;
-      const fields = this.renderBaseOnType[typeOfInfo];
-      return fields;
-    },
     AllRealEstateType() {
       if (this.isBuy) {
         return this.allBuyTypes;
@@ -523,17 +524,24 @@ export default {
     },
     DangThongTin() {
       const selectedType = this.newEstatePost.LoaiBDS;
+      console.log("selectedType", selectedType);
       if (selectedType) {
-        const allTypes = this.AllRealEstateType ?? this.allBuyTypes.concat(this.allRentTypes);
-        const typeOfInfo = allTypes?.find(
-          (type) => type.id === selectedType
-        );
+        const allTypes = [...this.allBuyTypes, ...this.allRentTypes];
+        console.log("allTypes", allTypes);
+        const typeOfInfo = allTypes?.find((type) => type.id === selectedType);
+        console.log("typeOfInfo", typeOfInfo);
         return typeOfInfo.DangThongTin;
       }
-      return '';
+      return "";
     },
     formattedPrice() {
       return formatCurrencyToVietnamese(this.newEstatePost.MucGia);
+    },
+    fieldsToRender() {
+      if (!this.newEstatePost.LoaiBDS) return [];
+      const typeOfInfo = this.DangThongTin;
+      const fields = this.renderBaseOnType[typeOfInfo];
+      return fields;
     },
   },
   methods: {
@@ -559,6 +567,9 @@ export default {
         },
       };
       this.newEstatePost = mappedEstate.bat_dong_san;
+      this.isBuy = response.loai_bat_dong_san.BanHayChoThue;
+      this.isRent = !response.loai_bat_dong_san.BanHayChoThue;
+
       this.loading = false;
       console.log(this.newEstatePost);
     },
@@ -568,7 +579,7 @@ export default {
         ...this.newEstatePost,
         LoaiBDS: this.newEstatePost.LoaiBDS,
         IDNguoiDung: this.currentUser.id,
-        HinhAnh: JSON.stringify(this.imageUrls),
+        HinhAnh: this.imageUrls ? JSON.stringify(this.imageUrls) : JSON.stringify(this.newEstatePost.HinhAnh),
         ThanhPho: this.location?.city || this.newEstatePost.ThanhPho,
         Quan: this.location?.district || this.newEstatePost.Quan,
         Phuong: this.location?.ward || this.newEstatePost.Phuong,

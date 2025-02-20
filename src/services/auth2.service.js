@@ -27,10 +27,7 @@ export class AuthService extends BaseService {
       const response = await this.request().post(`${this.entity}/signup`, newUser);
       return response.data;
     } catch (error) {
-      const message = error.response.data
-        ? error.response.data.error
-        : error.response.statusText;
-      throw new ErrorWrapper(error, message);
+      return error;
     }
   }
 
