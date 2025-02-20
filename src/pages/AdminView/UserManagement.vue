@@ -21,10 +21,10 @@
       :loading="listLoading"
     >
       <span slot="trang_thai" slot-scope="trang_thai">
-        <a-tag v-if="trang_thai == true" color="green">Hoạt động</a-tag>
-        <a-tag v-else color="red">Cảnh cáo vi phạm</a-tag>
+        <a-tag v-if="trang_thai" color="green">Hoạt động</a-tag>
+        <a-tag v-if="!trang_thai" color="red">Cảnh cáo vi phạm</a-tag>
       </span>
-      <span slot="action" slot-scope="text, record, trang_thai">
+      <span slot="action" slot-scope="text, record">
         <a-button
           type="primary"
           @click="handleViewUserDetail(record)"
@@ -35,7 +35,7 @@
           Xem thông tin
         </a-button>
         <a-popconfirm
-          v-if="trang_thai == true"
+          v-if="record.trang_thai"
           title="Xác nhận dừng hoạt động người dùng này?"
           ok-text="Xác nhận"
           cancel-text="Không"
@@ -45,14 +45,14 @@
           <el-button type="danger">Đánh dấu người dùng vi phạm</el-button>
         </a-popconfirm>
         <a-popconfirm
-          v-if="!trang_thai"
+          v-if="!record.trang_thai"
           title="Xác nhận mở lại hoạt động người dùng này?"
           ok-text="Xác nhận"
           cancel-text="Không"
           @confirm="confirmDeactivate(record)"
           @cancel="() => {}"
         >
-          <el-button type="danger">Mở hoạt động người dùng này</el-button>
+          <el-button type="warning">Mở hoạt động người dùng này</el-button>
         </a-popconfirm>
       </span>
     </a-table>
@@ -130,7 +130,6 @@ export default {
           mat_khau: record.mat_khau || "",
           trang_thai: !record.trang_thai,
         });
-        this.getUserById(record.id);
         this.getAllUsers();
       } catch (error) {
         console.log(error);

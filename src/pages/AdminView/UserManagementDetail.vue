@@ -22,10 +22,12 @@
         Thông tin người dùng
       </h1>
       <el-row :gutter="12">
-        <el-col :span="6"
-                :style="{
-                  marginTop: '50px'
-                }">
+        <el-col
+          :span="6"
+          :style="{
+            marginTop: '50px',
+          }"
+        >
           <div
             :style="{
               display: 'flex',
@@ -41,7 +43,7 @@
                 color: '#74150f',
                 verticalAlign: 'middle',
                 fontSize: '28px',
-                fontWeight: 'bold'
+                fontWeight: 'bold',
               }"
               :theme="'light'"
             >
@@ -70,17 +72,22 @@
             </h2>
           </div>
           <div>
-            <el-tag type="success" v-if="currentUser.trang_thai">Hoạt động</el-tag>
+            <el-tag type="success" 
+            v-if="currentUser.trang_thai"
+              >Hoạt động</el-tag
+            >
             <el-tag type="danger" v-else>Cảnh cáo vi phạm</el-tag>
           </div>
         </el-col>
-        <el-col :span="18" >
+        <el-col :span="18">
           <el-card shadow="never">
-            <div :style="{
-              display: 'flex',
-              justifyContent: 'space-between',
-              textAlign: 'left'
-            }">
+            <div
+              :style="{
+                display: 'flex',
+                justifyContent: 'space-between',
+                textAlign: 'left',
+              }"
+            >
               <div>
                 <h2
                   :style="{
@@ -96,34 +103,48 @@
                 </h2>
 
                 <p>
-                  <span class="label">Người đăng bài:  </span>
+                  <span class="label">Người đăng bài: </span>
                   {{ currentUser.ho_ten }}
                 </p>
                 <p>
-                  <span class="label">Email:  </span>
+                  <span class="label">Email: </span>
                   {{ currentUser.email }}
                 </p>
                 <p>
-                  <span class="label">Số điện thoại:  </span>
+                  <span class="label">Số điện thoại: </span>
                   {{ currentUser.so_dien_thoai }}
                 </p>
               </div>
 
               <div>
                 <a-popconfirm
+                  v-if="currentUser.trang_thai"
                   title="Xác nhận dừng hoạt động người dùng này?"
                   ok-text="Xác nhận"
                   cancel-text="Không"
                   @confirm="confirmDeactivate()"
-                  @cancel="()=>{}"
+                  @cancel="() => {}"
                 >
-                  <el-button type="danger">Đánh dấu người dùng vi phạm</el-button>
+                  <el-button type="danger"
+                    >Đánh dấu người dùng vi phạm</el-button
+                  >
+                </a-popconfirm>
+                <a-popconfirm
+                  v-if="!currentUser.trang_thai"
+                  title="Xác nhận mở lại hoạt động người dùng này?"
+                  ok-text="Xác nhận"
+                  cancel-text="Không"
+                  @confirm="confirmDeactivate()"
+                  @cancel="() => {}"
+                >
+                  <el-button type="warning"
+                    >Mở hoạt động người dùng này</el-button
+                  >
                 </a-popconfirm>
               </div>
             </div>
           </el-card>
         </el-col>
-
       </el-row>
       <div class="container">
         <h1
@@ -136,7 +157,7 @@
             display: 'block',
             textAlign: 'left',
             marginBottom: '10px',
-            marginTop: '10px'
+            marginTop: '10px',
           }"
         >
           Danh sách tin của {{ currentUser.ho_ten }}
@@ -208,13 +229,15 @@
       </div>
     </a-layout-content>
   </a-layout>
-
 </template>
 
 <script>
 import { AdminService } from "@/services/admin.service";
 import { RealEstateService } from "@/services/real_estate.service";
-import { RealEstatePostStatuses, RealEstatePostStatusTagStyle } from "@/constants/index";
+import {
+  RealEstatePostStatuses,
+  RealEstatePostStatusTagStyle,
+} from "@/constants/index";
 import { formatCurrencyToVietnamese } from "@/services/util";
 
 export default {
@@ -311,8 +334,9 @@ export default {
         await AdminService.updateUser(this.userId, {
           ...this.currentUser,
           trang_thai: !this.currentUser.trang_thai,
+          mat_khau: this.currentUser.mat_khau || "",
         });
-        this.getUserById(this.currentUser.id);
+        this.getUserById();
       } catch (error) {
         console.log(error);
       }
@@ -355,19 +379,19 @@ export default {
       deep: true,
     },
   },
-}
+};
 </script>
 <style scoped>
-  p {
-    font-size: 18px;
-  }
-  .container {
-    margin-top: 20px;
-  }
-  .label {
-    font-weight: bold;
-  }
-  .avatarAndName {
-    text-align: center;
-  }
+p {
+  font-size: 18px;
+}
+.container {
+  margin-top: 20px;
+}
+.label {
+  font-weight: bold;
+}
+.avatarAndName {
+  text-align: center;
+}
 </style>
