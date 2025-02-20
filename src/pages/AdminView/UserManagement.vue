@@ -25,15 +25,15 @@
         <a-tag v-if="!trang_thai" color="red">Cảnh cáo vi phạm</a-tag>
       </span>
       <span slot="action" slot-scope="text, record">
-        <a-button
-          type="primary"
+        <el-button
+          type="info"
           @click="handleViewUserDetail(record)"
           :style="{
             marginRight: '10px',
           }"
         >
           Xem thông tin
-        </a-button>
+        </el-button>
         <a-popconfirm
           v-if="record.trang_thai"
           title="Xác nhận dừng hoạt động người dùng này?"
