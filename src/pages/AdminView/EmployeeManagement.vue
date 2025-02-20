@@ -16,6 +16,14 @@
     </h1>
     <div class="header">
       <el-button
+        @click="getAllUsers()"
+        :style="{
+          marginBottom: '10px',
+        }"
+      >
+        <i class="el-icon-refresh"></i> 
+      </el-button>
+      <el-button
         type="primary"
         @click="handleCreateUser"
         :style="{
@@ -33,7 +41,7 @@
     >
       <span slot="trang_thai" slot-scope="trang_thai">
         <a-tag v-if="trang_thai == true" color="green">Hoạt động</a-tag>
-        <a-tag v-else color="red">Cảnh cáo vi phạm</a-tag>
+        <a-tag v-else color="red">Dừng hoạt động</a-tag>
       </span>
       <span slot="action" slot-scope="text, record">
         <a-button
@@ -46,13 +54,15 @@
             Sửa thông tin
         </a-button>
         <a-popconfirm
-          title="Xác nhận dừng hoạt động người dùng này?"
+          v-if="trang_thai == true"
+          title="Xác nhận dừng hoạt động nhân viên này?"
           ok-text="Xác nhận"
           cancel-text="Không"
           @confirm="confirmDeactivate(record)"
           @cancel="()=>{}"
         >
-          <el-button type="danger">Đánh dấu người dùng vi phạm</el-button>
+
+          <el-button type="danger">Đánh dấu dừng hoạt động nhân viên</el-button>
         </a-popconfirm>
       </span>
     </a-table>
@@ -155,11 +165,24 @@ export default {
       this.openEditDialog = false;
       this.getAllUsers();
     },
+    async confirmnReactivate(record) {
+      try {
+        await AdminService.updateUser(record.id, {
+          ...record,
+          trang_thai: true,
+          mat_khau: '123456'
+        });
+        this.getAllUsers();
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async confirmDeactivate(record) {
       try {
-        await AdminService.updateUser(this.record.id, {
+        await AdminService.updateUser(record.id, {
           ...record,
           trang_thai: false,
+          mat_khau: '123456'
         });
         this.getAllUsers();
       } catch (error) {

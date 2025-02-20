@@ -104,6 +104,16 @@ export default {
     RealEstateCardItem,
     EstateCardOnListPage,
   },
+  watch: {
+    currentUser: {
+      handler(newUser) {
+        if (newUser && newUser.id) {
+          this.getRealEstates();
+        }
+      },
+      immediate: true,
+    },
+  },
   computed: {
     ...mapGetters(["currentUser"]),
     waitingApproveRealEstates() {
@@ -118,7 +128,7 @@ export default {
       return this.allRealEstatesOfCurrentUser.filter(
         (estate) =>
           estate.bat_dong_san.TrangThai == RealEstatePostStatus.KHONG_DUYET ||
-          estate.TrangThai === RealEstatePostStatus.VI_PHAM
+          estate.bat_dong_san.TrangThai === RealEstatePostStatus.VI_PHAM
       );
     },
     showingRealEstates() {
@@ -129,7 +139,7 @@ export default {
       );
     },
   },
-  created() {
+  mounted() {
     this.getRealEstates();
   },
   methods: {
@@ -176,27 +186,27 @@ export default {
             message: "Xoá bài đăng thành công",
           });
         })
-        .catch(() => {
-
-        });
+        .catch(() => {});
     },
     async getRealEstates() {
       try {
         this.loading = true;
-        const response = await RealEstateService.getAllRealEstates({
-          IDNguoiDung: this.currentUser.id,
-        });
-        const mappedRealEstates = response.data.map((estate) => {
-          return {
-            ...estate,
-            bat_dong_san: {
-              ...estate.bat_dong_san,
-              HinhAnh: JSON.parse(estate.bat_dong_san.HinhAnh || ""),
-            },
-          };
-        });
-        this.allRealEstatesOfCurrentUser = mappedRealEstates;
-        this.loading = false;
+        if (this.currentUser.id) {
+          const response = await RealEstateService.getAllRealEstates({
+            IDNguoiDung: this.currentUser.id,
+          });
+          const mappedRealEstates = response.data.map((estate) => {
+            return {
+              ...estate,
+              bat_dong_san: {
+                ...estate.bat_dong_san,
+                HinhAnh: JSON.parse(estate.bat_dong_san.HinhAnh || ""),
+              },
+            };
+          });
+          this.allRealEstatesOfCurrentUser = mappedRealEstates;
+          this.loading = false;
+        }
       } catch (error) {
         console.log(error);
       }
